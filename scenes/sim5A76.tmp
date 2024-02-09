@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1dbgisroldo2"]
+
+[ext_resource type="Script" path="res://scripts/simulation.gd" id="1_ysqbh"]
+[ext_resource type="PackedScene" uid="uid://df42422dtmsi7" path="res://scenes/tile.tscn" id="2_xi1ts"]
+
+[node name="Simulation" type="Node3D"]
+script = ExtResource("1_ysqbh")
+tile = ExtResource("2_xi1ts")
+grid_size = Vector2i(3, 3)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 0.838461, 0.544961, 0, -0.544961, 0.838461, 0, 2.38798, 2.91341)
