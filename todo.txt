@@ -1,5 +1,4 @@
 TODO LIST (ordered)
 
-- Grid generation based on a X and Y size (same tile)
-- Random cell type (ground and water)
+- Random cell type (ground and water) and view adjustment
 - Random entities spawn

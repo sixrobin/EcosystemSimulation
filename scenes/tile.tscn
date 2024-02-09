@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://df42422dtmsi7"]
+[gd_scene load_steps=3 format=3 uid="uid://df42422dtmsi7"]
+
+[ext_resource type="Script" path="res://scripts/tile.gd" id="1_w4ipd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_420i3"]
 albedo_color = Color(0.156863, 0.733333, 0.270588, 1)
@@ -6,6 +8,7 @@ metallic_specular = 0.0
 roughness = 0.0
 
 [node name="Tile" type="Node3D"]
+script = ExtResource("1_w4ipd")
 
 [node name="TileView" type="CSGBox3D" parent="."]
 material_override = SubResource("StandardMaterial3D_420i3")
