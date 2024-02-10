@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsso16qkboult"]
+
+[ext_resource type="Script" path="res://scripts/rabbit.gd" id="1_ls0cy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nwtlo"]
+albedo_color = Color(0, 0, 0, 1)
+
+[node name="Rabbit" type="Node3D"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.1, 0)
+script = ExtResource("1_ls0cy")
+height_offset = 0.2
+
+[node name="Body" type="CSGBox3D" parent="."]
+size = Vector3(0.4, 0.4, 0.4)
+
+[node name="Tail" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, -0.25)
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Eye1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.079109, 0.0449199, 0.150561)
+material_override = SubResource("StandardMaterial3D_nwtlo")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Eye2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.079, 0.045, 0.151)
+material_override = SubResource("StandardMaterial3D_nwtlo")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Ear1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, 0.15)
+size = Vector3(0.1, 0.2, 0.1)
+
+[node name="Ear2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3, 0.15)
+size = Vector3(0.1, 0.2, 0.1)

@@ -1,4 +1,4 @@
 TODO LIST
 
-- Random entities spawn
+- Entities motion on tiles
 - Deterministic random
