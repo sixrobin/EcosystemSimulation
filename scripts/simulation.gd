@@ -40,7 +40,7 @@ func add_tile(x: int, y: int) -> Tile:
 
 func add_rabbit(tile: Tile) -> Rabbit:
 	var new_rabbit := rabbit.instantiate() as Rabbit
-	new_rabbit.set_tile(tile)
+	new_rabbit.set_tile(tile, true)
 	
 	add_child(new_rabbit)
 	return new_rabbit
