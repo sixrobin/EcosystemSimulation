@@ -32,7 +32,7 @@ func add_tile(x: int, y: int) -> Tile:
 	var new_tile := tile.instantiate() as Tile
 	new_tile.name = "Tile_X{x}_Y{y}".format({"x": x, "y": y})
 	new_tile.position = position
-	new_tile.set_type(0 if randf() > water_chance else 1)
+	new_tile.set_type(Tile.TileType.GRASS if randf() > water_chance else Tile.TileType.WATER)
 	
 	add_child(new_tile)
 	return new_tile
@@ -41,6 +41,7 @@ func add_tile(x: int, y: int) -> Tile:
 func add_rabbit(tile: Tile) -> Rabbit:
 	var new_rabbit := rabbit.instantiate() as Rabbit
 	new_rabbit.set_tile(tile, true)
+	tile.set_rabbit(new_rabbit)
 	
 	add_child(new_rabbit)
 	return new_rabbit
