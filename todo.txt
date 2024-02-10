@@ -1,4 +1,4 @@
-TODO LIST (ordered)
+TODO LIST
 
-- Random cell type (ground and water) and view adjustment
 - Random entities spawn
+- Deterministic random

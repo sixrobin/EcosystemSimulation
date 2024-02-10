@@ -8,6 +8,7 @@ script = ExtResource("1_ysqbh")
 tile = ExtResource("2_xi1ts")
 grid_size = Vector2i(20, 20)
 spacing = 0.43
+water_chance = 0.2
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 0.637733, 0.770257, 0, -0.770257, 0.637733, 0, 5, 5)
