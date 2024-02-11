@@ -1,5 +1,4 @@
 TODO LIST
 
-- Rabbits position issue on Y axis when moving
 - Make rabbits look to their destination tile
 - Deterministic random

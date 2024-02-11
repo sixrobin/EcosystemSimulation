@@ -32,10 +32,10 @@ var steps := 0
 
 func get_tile(x: int, y: int) -> Tile:
 	return tiles[x * grid_size.y + y]
-	
+
 func get_random_tile() -> Tile:
 	return tiles.pick_random() as Tile
-	
+
 func get_random_neighbour_tile(tile: Tile) -> Tile:
 	var direction := randi_range(0, 3)
 	var result: Tile
@@ -113,7 +113,8 @@ func _ready() -> void:
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.
 		print("TODO: Processing all simulation immediatly.")
-			
+
+
 func _process(delta: float) -> void:
 	if simulation_type != SimulationType.IMMEDIATE:
 		timer += delta

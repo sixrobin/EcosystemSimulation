@@ -3,6 +3,7 @@ extends Node3D
 
 
 @export var height_offset := 0.5
+@export var move_duration := 0.5
 var tile: Tile
 
 
@@ -25,7 +26,7 @@ func move_to_tile(new_tile: Tile) -> void:
 	var time_step = 0.016
 	while t < 1.0:
 		await get_tree().create_timer(time_step).timeout
-		t += time_step
+		t += time_step / move_duration
 		position = (1.0 - t) * previous_position + t * target_position
 	
 	position = target_position
