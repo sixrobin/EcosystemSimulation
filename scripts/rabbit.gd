@@ -20,13 +20,12 @@ func set_tile(new_tile: Tile, instantly: bool) -> void:
 
 func move_to_tile(new_tile: Tile) -> void:
 	var previous_position := position
+	var target_position = new_tile.position + Vector3(0.0, height_offset, 0.0)
 	var t = 0.0
 	var time_step = 0.016
 	while t < 1.0:
 		await get_tree().create_timer(time_step).timeout
 		t += time_step
-		position = (1.0 - t) * previous_position + t * new_tile.position
-		position.y += height_offset
+		position = (1.0 - t) * previous_position + t * target_position
 	
-	position = tile.position
-	position.y += height_offset
+	position = target_position
