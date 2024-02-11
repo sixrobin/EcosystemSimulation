@@ -5,7 +5,7 @@ extends Node3D
 enum TileType
 {
 	NONE,
-	GRASS,
+	GROUND,
 	WATER	
 }
 
@@ -20,7 +20,7 @@ var rabbit: Rabbit
 
 
 func can_add_rabbit() -> bool:
-	return type == TileType.GRASS and rabbit == null
+	return type == TileType.GROUND and rabbit == null
 
 
 func set_coords(new_x: int, new_y: int) -> void:
@@ -31,8 +31,8 @@ func set_coords(new_x: int, new_y: int) -> void:
 func set_type(new_type: TileType) -> void:
 	type = new_type
 	
-	view_grass.set_process(new_type == TileType.GRASS)
-	view_grass.visible = new_type == TileType.GRASS
+	view_grass.set_process(new_type == TileType.GROUND)
+	view_grass.visible = new_type == TileType.GROUND
 	
 	view_water.set_process(new_type == TileType.WATER)
 	view_water.visible = new_type == TileType.WATER

@@ -15,8 +15,9 @@ enum SimulationType
 @export var step_delay := 1.5
 
 @export_group("References")
-@export var tile: PackedScene
-@export var rabbit: PackedScene
+@export var tile_scene: PackedScene
+@export var rabbit_scene: PackedScene
+@export var grass_scene: PackedScene
 
 @export_group("Grid settings")
 @export var grid_size: Vector2i
@@ -57,25 +58,25 @@ func get_random_neighbour_tile(tile: Tile) -> Tile:
 
 
 func add_tile(x: int, y: int) -> Tile:
-	var position := Vector3(x - grid_size.x / 2, 0.0, y - grid_size.y / 2)
+	var pos := Vector3(x - grid_size.x / 2.0, 0.0, y - grid_size.y / 2.0)
 	if grid_size.x % 2 == 0:
-		position.x += 0.5
+		pos.x += 0.5
 	if grid_size.y % 2 == 0:
-		position.z += 0.5
-	position *= spacing
-	position = -position # Flip grid view.
+		pos.z += 0.5
+	pos *= spacing
+	pos = -pos # Flip grid view.
 	
-	var new_tile := tile.instantiate() as Tile
+	var new_tile := tile_scene.instantiate() as Tile
 	new_tile.name = "Tile_X{x}_Y{y}".format({"x": x, "y": y})
-	new_tile.position = position
-	new_tile.set_type(Tile.TileType.GRASS if randf() > water_chance else Tile.TileType.WATER)
+	new_tile.position = pos
+	new_tile.set_type(Tile.TileType.GROUND if randf() > water_chance else Tile.TileType.WATER)
 	new_tile.set_coords(x, y)
 	
 	add_child(new_tile)
 	return new_tile
 
 func add_rabbit(tile: Tile) -> Rabbit:
-	var new_rabbit := rabbit.instantiate() as Rabbit
+	var new_rabbit := rabbit_scene.instantiate() as Rabbit
 	new_rabbit.set_tile(tile, true)
 	
 	add_child(new_rabbit)

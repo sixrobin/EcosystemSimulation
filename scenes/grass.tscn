@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://clc1ietxbg1ja"]
+
+[ext_resource type="Script" path="res://scripts/grass.gd" id="1_yya5b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tjo0h"]
+albedo_color = Color(0.286275, 0.529412, 0.152941, 1)
+
+[node name="Grass" type="Node3D"]
+script = ExtResource("1_yya5b")
+
+[node name="CSGBox3D1" type="CSGBox3D" parent="."]
+transform = Transform3D(0.866827, -0.498609, 0, 0.498609, 0.866827, 0, 0, 0, 1, -0.169789, 0.313001, 0)
+material_override = SubResource("StandardMaterial3D_tjo0h")
+size = Vector3(0.2, 1, 0.2)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.0175074, 0.153444, -0.988002, 0.234601, 0.959937, 0.153242, 0.971934, -0.23447, -0.0191921, 0.0679531, 0.313001, -0.198769)
+material_override = SubResource("StandardMaterial3D_tjo0h")
+size = Vector3(0.2, 1.2, 0.2)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(0.231503, 0.323303, -0.917541, -0.433326, 0.8787, 0.200286, 0.870997, 0.351228, 0.343517, 0.158296, 0.302303, 0.125556)
+material_override = SubResource("StandardMaterial3D_tjo0h")
+size = Vector3(0.2, 0.8, 0.2)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="."]
+transform = Transform3D(0.259496, 0.108174, -0.959667, -0.098596, 0.991482, 0.0850994, 0.960698, 0.0725365, 0.267951, 0.0275863, 0.302303, -0.0098471)
+material_override = SubResource("StandardMaterial3D_tjo0h")
+size = Vector3(0.2, 0.8, 0.2)
