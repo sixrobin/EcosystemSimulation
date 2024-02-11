@@ -6,7 +6,9 @@
 albedo_color = Color(0.286275, 0.529412, 0.152941, 1)
 
 [node name="Grass" type="Node3D"]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 script = ExtResource("1_yya5b")
+height_offset = 0.1
 
 [node name="CSGBox3D1" type="CSGBox3D" parent="."]
 transform = Transform3D(0.866827, -0.498609, 0, 0.498609, 0.866827, 0, 0, 0, 1, -0.169789, 0.313001, 0)

@@ -23,10 +23,12 @@ enum SimulationType
 @export var grid_size: Vector2i
 @export var spacing := 1.0
 @export var init_rabbits := 10
+@export var init_grasses := 10
 @export_range(0.0, 1.0) var water_chance := 0.25
 
 var tiles: Array[Tile]
 var rabbits: Array[Rabbit]
+var grasses: Array[Grass]
 var timer := 0.0
 var steps := 0
 
@@ -78,9 +80,14 @@ func add_tile(x: int, y: int) -> Tile:
 func add_rabbit(tile: Tile) -> Rabbit:
 	var new_rabbit := rabbit_scene.instantiate() as Rabbit
 	new_rabbit.set_tile(tile, true)
-	
 	add_child(new_rabbit)
 	return new_rabbit
+	
+func add_grass(tile: Tile) -> Grass:
+	var new_grass := grass_scene.instantiate() as Grass
+	new_grass.set_tile(tile)
+	add_child(new_grass)
+	return new_grass
 
 
 func step() -> void:
@@ -110,6 +117,14 @@ func _ready() -> void:
 			
 		var new_rabbit = add_rabbit(rabbit_tile)
 		rabbits.append(new_rabbit)
+		
+	for i in init_grasses:
+		var grass_tile := get_random_tile()
+		while not grass_tile.can_add_grass():
+			grass_tile = get_random_tile()
+			
+		var new_grass = add_grass(grass_tile)
+		grasses.append(new_grass)
 	
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.
