@@ -6,6 +6,7 @@
 
 [node name="Simulation" type="Node3D"]
 script = ExtResource("1_ysqbh")
+step_delay = 1.3
 tile = ExtResource("2_xi1ts")
 rabbit = ExtResource("3_hu3ma")
 grid_size = Vector2i(20, 20)

@@ -2,16 +2,32 @@ class_name Simulation
 extends Node3D
 
 
+enum SimulationType
+{
+	ANIMATED,
+	INSTANT_STEPS,
+	IMMEDIATE
+}
+
+
+@export_group("Simulation settings")
+@export var simulation_type := SimulationType.ANIMATED
 @export var step_delay := 1.5
+
+@export_group("References")
 @export var tile: PackedScene
 @export var rabbit: PackedScene
+
+@export_group("Grid settings")
 @export var grid_size: Vector2i
 @export var spacing := 1.0
 @export var init_rabbits := 10
 @export_range(0.0, 1.0) var water_chance := 0.25
+
 var tiles: Array[Tile]
 var rabbits: Array[Rabbit]
 var timer := 0.0
+var steps := 0
 
 
 func get_tile(x: int, y: int) -> Tile:
@@ -73,10 +89,14 @@ func step() -> void:
 		while new_tile == null or not new_tile.can_add_rabbit():
 			new_tile = get_random_neighbour_tile(rabbit.tile)
 			
-		rabbit.set_tile(new_tile, false)
+		rabbit.set_tile(new_tile, simulation_type != SimulationType.ANIMATED)
+	
+	steps += 1
 
 
 func _ready() -> void:
+	# TODO: initialize random seed.
+	
 	for x in grid_size.x:
 		for y in grid_size.y:
 			var new_tile := add_tile(x, y)
@@ -89,9 +109,14 @@ func _ready() -> void:
 			
 		var new_rabbit = add_rabbit(rabbit_tile)
 		rabbits.append(new_rabbit)
+	
+	if simulation_type == SimulationType.IMMEDIATE:
+		# TODO: Implement this properly.
+		print("TODO: Processing all simulation immediatly.")
 			
 func _process(delta: float) -> void:
-	timer += delta
-	if timer >= step_delay:
-		step()
-		timer = 0.0
+	if simulation_type != SimulationType.IMMEDIATE:
+		timer += delta
+		if timer >= step_delay:
+			step()
+			timer = 0.0
