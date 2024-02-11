@@ -12,6 +12,7 @@ enum TileType
 
 @export var view_grass: Node3D
 @export var view_water: Node3D
+
 var type: TileType
 var x := -1
 var y := -1

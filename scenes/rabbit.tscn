@@ -14,23 +14,23 @@ height_offset = 0.2
 size = Vector3(0.4, 0.4, 0.4)
 
 [node name="Tail" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, -0.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0.25)
 size = Vector3(0.1, 0.1, 0.1)
 
 [node name="Eye1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.079109, 0.0449199, 0.150561)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.079, 0.045, -0.151)
 material_override = SubResource("StandardMaterial3D_nwtlo")
 size = Vector3(0.1, 0.1, 0.1)
 
 [node name="Eye2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.079, 0.045, 0.151)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.079, 0.045, -0.151)
 material_override = SubResource("StandardMaterial3D_nwtlo")
 size = Vector3(0.1, 0.1, 0.1)
 
 [node name="Ear1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, 0.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, -0.15)
 size = Vector3(0.1, 0.2, 0.1)
 
 [node name="Ear2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3, 0.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3, -0.15)
 size = Vector3(0.1, 0.2, 0.1)

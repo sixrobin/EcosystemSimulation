@@ -4,6 +4,7 @@ extends Node3D
 
 @export var height_offset := 0.5
 @export var move_duration := 0.5
+
 var tile: Tile
 
 
@@ -22,6 +23,8 @@ func set_tile(new_tile: Tile, instantly: bool) -> void:
 func move_to_tile(new_tile: Tile) -> void:
 	var previous_position := position
 	var target_position = new_tile.position + Vector3(0.0, height_offset, 0.0)
+	look_at(target_position)
+	
 	var t = 0.0
 	var time_step = 0.016
 	while t < 1.0:

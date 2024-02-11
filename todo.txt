@@ -1,4 +1,11 @@
 TODO LIST
 
-- Make rabbits look to their destination tile
+- Add grass for rabbits to eat and respawn randomly across simulation
+- Make rabbit go to nearest grass to eat it
+- Make rabbit go to nearest water to drink
+- Rabbit gauges:
+	- Hunger
+	- Thirst
+	
 - Deterministic random
+- Camera motion (zoom and pan)
