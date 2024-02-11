@@ -13,11 +13,18 @@ enum TileType
 @export var view_grass: Node3D
 @export var view_water: Node3D
 var type: TileType
+var x := -1
+var y := -1
 var rabbit: Rabbit
 
 
 func can_add_rabbit() -> bool:
 	return type == TileType.GRASS and rabbit == null
+
+
+func set_coords(new_x: int, new_y: int) -> void:
+	x = new_x
+	y = new_y
 
 
 func set_type(new_type: TileType) -> void:

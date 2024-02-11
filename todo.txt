@@ -1,4 +1,7 @@
 TODO LIST
 
+- Simulation type (instantanous vs normal)
 - Entities motion on tiles
+- Rabbits position issue on Y axis when moving
+- Make rabbits look to their destination tile
 - Deterministic random

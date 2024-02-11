@@ -7,7 +7,10 @@ var tile: Tile
 
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
+	if tile != null: tile.rabbit = null
 	tile = new_tile
+	if tile != null: tile.rabbit = self
+	
 	if instantly:
 		position = tile.position
 		position.y += height_offset

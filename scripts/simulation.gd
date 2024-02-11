@@ -2,6 +2,7 @@ class_name Simulation
 extends Node3D
 
 
+@export var step_delay := 1.5
 @export var tile: PackedScene
 @export var rabbit: PackedScene
 @export var grid_size: Vector2i
@@ -10,14 +11,33 @@ extends Node3D
 @export_range(0.0, 1.0) var water_chance := 0.25
 var tiles: Array[Tile]
 var rabbits: Array[Rabbit]
+var timer := 0.0
 
 
 func get_tile(x: int, y: int) -> Tile:
 	return tiles[x * grid_size.y + y]
 	
-	
 func get_random_tile() -> Tile:
 	return tiles.pick_random() as Tile
+	
+func get_random_neighbour_tile(tile: Tile) -> Tile:
+	var direction := randi_range(0, 3)
+	var result: Tile
+	
+	# TODO: working first draft for such a method, although a much better way
+	# would be to loop through shuffled neighbours and get the first
+	# available one. This would allow the method to take a lambda condition.
+	
+	if direction == 0 and tile.x < grid_size.x - 1:
+		result = get_tile(tile.x + 1, tile.y)
+	elif direction == 1 and tile.y < grid_size.y - 1:
+		result = get_tile(tile.x, tile.y + 1)
+	elif direction == 2 and tile.x > 0:
+		result = get_tile(tile.x - 1, tile.y)
+	elif direction == 3 and tile.y > 0:
+		result = get_tile(tile.x, tile.y - 1)
+	
+	return result
 
 
 func add_tile(x: int, y: int) -> Tile:
@@ -33,18 +53,27 @@ func add_tile(x: int, y: int) -> Tile:
 	new_tile.name = "Tile_X{x}_Y{y}".format({"x": x, "y": y})
 	new_tile.position = position
 	new_tile.set_type(Tile.TileType.GRASS if randf() > water_chance else Tile.TileType.WATER)
+	new_tile.set_coords(x, y)
 	
 	add_child(new_tile)
 	return new_tile
 
-
 func add_rabbit(tile: Tile) -> Rabbit:
 	var new_rabbit := rabbit.instantiate() as Rabbit
 	new_rabbit.set_tile(tile, true)
-	tile.set_rabbit(new_rabbit)
 	
 	add_child(new_rabbit)
 	return new_rabbit
+
+
+func step() -> void:
+	for rabbit in rabbits:
+		var new_tile := get_random_neighbour_tile(rabbit.tile)
+		# TODO: May cause infinite loops if a rabbit is stuck.
+		while new_tile == null or not new_tile.can_add_rabbit():
+			new_tile = get_random_neighbour_tile(rabbit.tile)
+			
+		rabbit.set_tile(new_tile, false)
 
 
 func _ready() -> void:
@@ -60,3 +89,9 @@ func _ready() -> void:
 			
 		var new_rabbit = add_rabbit(rabbit_tile)
 		rabbits.append(new_rabbit)
+			
+func _process(delta: float) -> void:
+	timer += delta
+	if timer >= step_delay:
+		step()
+		timer = 0.0
