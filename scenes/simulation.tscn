@@ -13,6 +13,7 @@ rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")
 grid_size = Vector2i(20, 20)
 spacing = 0.4
+init_rabbits = 1
 water_chance = 0.2
 
 [node name="Camera" type="Camera3D" parent="."]

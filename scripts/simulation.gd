@@ -73,6 +73,7 @@ func add_tile(x: int, y: int) -> Tile:
 	new_tile.position = pos
 	new_tile.set_type(Tile.TileType.GROUND if randf() > water_chance else Tile.TileType.WATER)
 	new_tile.set_coords(x, y)
+	new_tile.init_next_grass_timer()
 	
 	add_child(new_tile)
 	return new_tile
@@ -91,6 +92,8 @@ func add_grass(tile: Tile) -> Grass:
 
 
 func step() -> void:
+	steps += 1
+	
 	for rabbit in rabbits:
 		var new_tile := get_random_neighbour_tile(rabbit.tile)
 		# TODO: May cause infinite loops if a rabbit is stuck.
@@ -99,7 +102,8 @@ func step() -> void:
 			
 		rabbit.set_tile(new_tile, simulation_type != SimulationType.ANIMATED)
 	
-	steps += 1
+	for tile in tiles:
+		tile.step(steps)
 
 
 func _ready() -> void:

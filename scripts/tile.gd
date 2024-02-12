@@ -14,11 +14,31 @@ enum TileType
 @export var view_grass: Node3D
 @export var view_water: Node3D
 
+@export_group("Settings")
+@export var next_grass_timer_min_max := Vector2i(5, 25)
+
 var type: TileType
 var x := -1
 var y := -1
 var rabbit: Rabbit
 var grass: Grass
+var steps_until_grass := -1
+
+
+func step(total_steps: int) -> void:
+	if steps_until_grass > 0:
+		steps_until_grass -= 1
+		if steps_until_grass == 0:
+			steps_until_grass = -1
+			if can_add_grass():
+				(get_parent() as Simulation).add_grass(self)
+
+
+func init_next_grass_timer() -> int:
+	var timer_min = next_grass_timer_min_max.x
+	var timer_max = next_grass_timer_min_max.y
+	steps_until_grass = randi_range(timer_min, timer_max)
+	return steps_until_grass
 
 
 func can_add_rabbit() -> bool:
