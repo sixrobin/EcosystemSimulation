@@ -59,6 +59,44 @@ func get_random_neighbour_tile(tile: Tile) -> Tile:
 	
 	return result
 
+func a_star(src: Tile, dst: Tile) -> Array[Tile]:
+	if src == dst:
+		return [src, dst]
+		
+	# TODO: Reset all nodes costs.
+	
+	var close_set: Array[Tile]
+	var open_set := [src]
+
+	while open_set.size() > 0:
+		var current = open_set.pop_front() as Tile
+
+		if current == dst:
+			return a_star_retrace(src, dst)
+
+		close_set.append(current)
+
+		# TODO: Handle costs in tile.gd.
+		for neighbour in current.neighbours:
+			if not neighbour.IsNodeAvailable or close_set.has(neighbour):
+				continue
+
+			var neighbour_cost = current.GCost + neighbour.CostToNode(current);
+
+			if neighbour_cost < neighbour.GCost or not open_set.has(neighbour):
+				neighbour.GCost = neighbour_cost
+				neighbour.HCost = current.GCost + neighbour.CostToNode(current)
+				neighbour.ParentNode = current
+
+				if not open_set.has(neighbour):
+					open_set.append(neighbour)
+
+	print("A* error: No path found!");
+	return [null] # TMP.
+
+func a_star_retrace(src: Tile, dst: Tile) -> Array[Tile]:
+	return [null]
+
 
 func add_tile(x: int, y: int) -> Tile:
 	var pos := Vector3(x - grid_size.x / 2.0, 0.0, y - grid_size.y / 2.0)

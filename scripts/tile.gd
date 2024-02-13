@@ -20,9 +20,12 @@ enum TileType
 var type: TileType
 var x := -1
 var y := -1
+var neighbours: Array[Tile]
 var rabbit: Rabbit
 var grass: Grass
 var steps_until_grass := -1
+
+# TODO: A* variables.
 
 
 func coords() -> Vector2i:
