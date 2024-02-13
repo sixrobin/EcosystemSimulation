@@ -97,11 +97,15 @@ func step() -> void:
 	
 	for rabbit in rabbits:
 		var new_tile := get_random_neighbour_tile(rabbit.tile)
-		# TODO: May cause infinite loops if a rabbit is stuck.
+		var iterations := 0
 		while new_tile == null or not new_tile.can_add_rabbit():
 			new_tile = get_random_neighbour_tile(rabbit.tile)
-			
-		rabbit.set_tile(new_tile, simulation_type != SimulationType.ANIMATED)
+			iterations += 1
+			if iterations == 100:
+				break
+		
+		if iterations < 100:
+			rabbit.set_tile(new_tile, simulation_type != SimulationType.ANIMATED)
 	
 	for tile in tiles:
 		tile.step(steps)
