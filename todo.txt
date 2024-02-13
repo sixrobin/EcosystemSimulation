@@ -1,5 +1,6 @@
 TODO LIST
 
+- Pathfinding from 2 tiles
 - Make rabbit go to nearest grass to eat it
 - Make rabbit go to nearest water to drink
 - Rabbit gauges:

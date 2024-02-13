@@ -131,9 +131,6 @@ func _ready() -> void:
 		var new_grass = add_grass(grass_tile)
 		grasses.append(new_grass)
 	
-	for r in rabbits:
-		r.look_at_closest_grass()
-	
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.
 		print("TODO: Processing all simulation immediatly.")
