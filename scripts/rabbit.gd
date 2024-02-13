@@ -6,6 +6,7 @@ extends Node3D
 @export var move_duration := 0.5
 
 var tile: Tile
+var target_grass: Grass
 
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
@@ -33,3 +34,22 @@ func move_to_tile(new_tile: Tile) -> void:
 		position = (1.0 - t) * previous_position + t * target_position
 	
 	position = target_position
+
+
+func get_closest_grass() -> Grass:
+	var closest_grass: Grass
+	var closest_grass_distance := (1 << 63) - 1
+	
+	var simulation := get_parent() as Simulation
+	for grass in simulation.grasses:
+		var to_grass := Vector2i(grass.tile.coords() - tile.coords())
+		var grass_distance := to_grass.length()
+		if grass_distance < closest_grass_distance:
+			closest_grass_distance = grass_distance
+			closest_grass = grass
+	
+	return closest_grass
+
+func look_at_closest_grass() -> void:
+	target_grass = get_closest_grass()
+	look_at(target_grass.position)

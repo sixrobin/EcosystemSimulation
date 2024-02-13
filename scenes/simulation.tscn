@@ -7,13 +7,13 @@
 
 [node name="Simulation" type="Node3D"]
 script = ExtResource("1_ysqbh")
+simulation_type = 0
 step_delay = 1.3
 tile_scene = ExtResource("2_xi1ts")
 rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")
 grid_size = Vector2i(20, 20)
 spacing = 0.4
-init_rabbits = 1
 water_chance = 0.2
 
 [node name="Camera" type="Camera3D" parent="."]

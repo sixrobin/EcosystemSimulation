@@ -4,6 +4,7 @@ extends Node3D
 
 enum SimulationType
 {
+	NONE,
 	ANIMATED,
 	INSTANT_STEPS,
 	IMMEDIATE
@@ -130,13 +131,16 @@ func _ready() -> void:
 		var new_grass = add_grass(grass_tile)
 		grasses.append(new_grass)
 	
+	for r in rabbits:
+		r.look_at_closest_grass()
+	
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.
 		print("TODO: Processing all simulation immediatly.")
 
 
 func _process(delta: float) -> void:
-	if simulation_type != SimulationType.IMMEDIATE:
+	if simulation_type != SimulationType.IMMEDIATE and simulation_type != SimulationType.NONE:
 		timer += delta
 		if timer >= step_delay:
 			step()

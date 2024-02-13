@@ -25,6 +25,10 @@ var grass: Grass
 var steps_until_grass := -1
 
 
+func coords() -> Vector2i:
+	return Vector2i(x, y)
+
+
 func step(total_steps: int) -> void:
 	if steps_until_grass > 0:
 		steps_until_grass -= 1
