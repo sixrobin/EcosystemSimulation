@@ -7,6 +7,14 @@ extends Node3D
 
 var tile: Tile
 var target_grass: Grass
+var current_path: Array[Tile]
+
+
+func step(simulation_type: Simulation.SimulationType) -> void:
+	if current_path != null and current_path.size() > 0:
+		print("Rabbit step.")
+		var next_tile = current_path.pop_front()
+		set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
 
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
@@ -15,6 +23,7 @@ func set_tile(new_tile: Tile, instantly: bool) -> void:
 	if tile != null: tile.rabbit = self
 	
 	if instantly:
+		look_at(tile.position + Vector3(0.0, height_offset, 0.0))
 		position = tile.position
 		position.y += height_offset
 	else:
@@ -26,7 +35,7 @@ func move_to_tile(new_tile: Tile) -> void:
 	var target_position = new_tile.position + Vector3(0.0, height_offset, 0.0)
 	look_at(target_position)
 	
-	var t = 0.0
+	var t := 0.0
 	var time_step = 0.016
 	while t < 1.0:
 		await get_tree().create_timer(time_step).timeout
@@ -49,7 +58,31 @@ func get_closest_grass() -> Grass:
 			closest_grass = grass
 	
 	return closest_grass
+	
+func get_farthest_grass() -> Grass:
+	var farthest_grass: Grass
+	var farthest_grass_distance := 0
+	
+	var simulation := get_parent() as Simulation
+	for grass in simulation.grasses:
+		var to_grass := Vector2i(grass.tile.coords() - tile.coords())
+		var grass_distance := to_grass.length()
+		if grass_distance > farthest_grass_distance:
+			farthest_grass_distance = grass_distance
+			farthest_grass = grass
+	
+	return farthest_grass
 
 func look_at_closest_grass() -> void:
 	target_grass = get_closest_grass()
+	var simulation := get_parent() as Simulation
+	current_path = simulation.a_star(tile, target_grass.tile)
+	current_path.remove_at(0)
+	look_at(target_grass.position)
+
+func look_at_farthest_grass() -> void:
+	target_grass = get_farthest_grass()
+	var simulation := get_parent() as Simulation
+	current_path = simulation.a_star(tile, target_grass.tile)
+	current_path.remove_at(0)
 	look_at(target_grass.position)

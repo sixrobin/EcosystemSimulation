@@ -40,62 +40,56 @@ func get_tile(x: int, y: int) -> Tile:
 func get_random_tile() -> Tile:
 	return tiles.pick_random() as Tile
 
-func get_random_neighbour_tile(tile: Tile) -> Tile:
-	var direction := randi_range(0, 3)
-	var result: Tile
-	
-	# TODO: working first draft for such a method, although a much better way
-	# would be to loop through shuffled neighbours and get the first
-	# available one. This would allow the method to take a lambda condition.
-	
-	if direction == 0 and tile.x < grid_size.x - 1:
-		result = get_tile(tile.x + 1, tile.y)
-	elif direction == 1 and tile.y < grid_size.y - 1:
-		result = get_tile(tile.x, tile.y + 1)
-	elif direction == 2 and tile.x > 0:
-		result = get_tile(tile.x - 1, tile.y)
-	elif direction == 3 and tile.y > 0:
-		result = get_tile(tile.x, tile.y - 1)
-	
-	return result
 
 func a_star(src: Tile, dst: Tile) -> Array[Tile]:
 	if src == dst:
 		return [src, dst]
 		
-	# TODO: Reset all nodes costs.
+	for t in tiles:
+		t.g_cost = 0
+		t.h_cost = 0
 	
 	var close_set: Array[Tile]
 	var open_set := [src]
 
 	while open_set.size() > 0:
 		var current = open_set.pop_front() as Tile
-
 		if current == dst:
 			return a_star_retrace(src, dst)
 
 		close_set.append(current)
 
-		# TODO: Handle costs in tile.gd.
 		for neighbour in current.neighbours:
-			if not neighbour.IsNodeAvailable or close_set.has(neighbour):
+			if close_set.has(neighbour):
 				continue
 
-			var neighbour_cost = current.GCost + neighbour.CostToNode(current);
-
-			if neighbour_cost < neighbour.GCost or not open_set.has(neighbour):
-				neighbour.GCost = neighbour_cost
-				neighbour.HCost = current.GCost + neighbour.CostToNode(current)
-				neighbour.ParentNode = current
+			var neighbour_cost = neighbour.a_star_cost_to(current)
+			if neighbour_cost == -1:
+				continue
+				
+			var cost = current.g_cost + neighbour.a_star_cost_to(current)
+			if cost < neighbour.g_cost or not open_set.has(neighbour):
+				neighbour.g_cost = cost
+				neighbour.h_cost = current.g_cost + neighbour.a_star_cost_to(current)
+				neighbour.a_star_parent = current
 
 				if not open_set.has(neighbour):
 					open_set.append(neighbour)
 
 	print("A* error: No path found!");
-	return [null] # TMP.
+	return [null]
 
 func a_star_retrace(src: Tile, dst: Tile) -> Array[Tile]:
-	return [null]
+	var path: Array[Tile]
+	var current = dst
+	
+	while current != src:
+		path.append(current)
+		current = current.a_star_parent
+		
+	path.append(src)
+	path.reverse()
+	return path
 
 
 func add_tile(x: int, y: int) -> Tile:
@@ -133,46 +127,54 @@ func add_grass(tile: Tile) -> Grass:
 func step() -> void:
 	steps += 1
 	
-	for rabbit in rabbits:
-		var new_tile := get_random_neighbour_tile(rabbit.tile)
-		var iterations := 0
-		while new_tile == null or not new_tile.can_add_rabbit():
-			new_tile = get_random_neighbour_tile(rabbit.tile)
-			iterations += 1
-			if iterations == 100:
-				break
-		
-		if iterations < 100:
-			rabbit.set_tile(new_tile, simulation_type != SimulationType.ANIMATED)
+	for r in rabbits:
+		r.step(simulation_type)
 	
-	for tile in tiles:
-		tile.step(steps)
+	for t in tiles:
+		t.step(steps)
 
 
 func _ready() -> void:
 	# TODO: initialize random seed.
 	
+	# Init tiles.
 	for x in grid_size.x:
 		for y in grid_size.y:
 			var new_tile := add_tile(x, y)
 			tiles.append(new_tile)
 
+	# Init tiles neighbours.
+	for t in tiles:
+		if t.x < grid_size.x - 1:
+			t.add_neighbour(get_tile(t.x + 1, t.y))
+		if t.y < grid_size.y - 1:
+			t.add_neighbour(get_tile(t.x, t.y + 1))
+		if t.x > 0:
+			t.add_neighbour(get_tile(t.x - 1, t.y))
+		if t.y > 0:
+			t.add_neighbour(get_tile(t.x, t.y - 1))
+
+	# Init rabbits.
 	for i in init_rabbits:
 		var rabbit_tile := get_random_tile()
 		while not rabbit_tile.can_add_rabbit():
 			rabbit_tile = get_random_tile()
-			
+		
 		var new_rabbit = add_rabbit(rabbit_tile)
 		rabbits.append(new_rabbit)
-		
+
+	# Init grass.
 	for i in init_grasses:
 		var grass_tile := get_random_tile()
 		while not grass_tile.can_add_grass():
 			grass_tile = get_random_tile()
-			
+		
 		var new_grass = add_grass(grass_tile)
 		grasses.append(new_grass)
-	
+		
+	for r in rabbits:
+		r.look_at_closest_grass()
+
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.
 		print("TODO: Processing all simulation immediatly.")

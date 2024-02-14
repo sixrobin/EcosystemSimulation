@@ -16,6 +16,7 @@ enum TileType
 
 @export_group("Settings")
 @export var next_grass_timer_min_max := Vector2i(5, 25)
+@export var discard_grass := false
 
 var type: TileType
 var x := -1
@@ -25,11 +26,19 @@ var rabbit: Rabbit
 var grass: Grass
 var steps_until_grass := -1
 
-# TODO: A* variables.
+# A* variables.
+var is_a_star_available := true
+var a_star_parent: Tile
+var g_cost := 0
+var h_cost := 0
 
 
 func coords() -> Vector2i:
 	return Vector2i(x, y)
+	
+
+func add_neighbour(new_neighbour: Tile) -> void:
+	neighbours.append(new_neighbour)
 
 
 func step(total_steps: int) -> void:
@@ -39,6 +48,14 @@ func step(total_steps: int) -> void:
 			steps_until_grass = -1
 			if can_add_grass():
 				(get_parent() as Simulation).add_grass(self)
+
+
+func a_star_cost_to(neighbour: Tile) -> int:
+	if neighbour.type == TileType.WATER:
+		return -1
+	if neighbour.grass != null:
+		return -1
+	return 1
 
 
 func init_next_grass_timer() -> int:
@@ -52,6 +69,8 @@ func can_add_rabbit() -> bool:
 	return type == TileType.GROUND and rabbit == null and grass == null
 
 func can_add_grass() -> bool:
+	if discard_grass:
+		return false
 	return type == TileType.GROUND and rabbit == null and grass == null
 
 
