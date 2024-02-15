@@ -5,6 +5,8 @@ extends Node3D
 @export_group("References")
 @export var view_world: Node3D
 @export var gauge_hunger: Gauge
+# TODO: gauge_thirst
+# TODO: gauge_reproduction
 
 @export_group("Settings")
 @export var full_hunger_steps := 100
@@ -13,6 +15,8 @@ extends Node3D
 
 var tile: Tile
 var hunger := 0.0
+# TODO: thirst
+# TODO: reproduction
 var target_grass: Grass
 var current_path: Array = []
 
@@ -21,6 +25,9 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 	hunger += 1.0 / full_hunger_steps
 	if hunger > 1.0:
 		print("Dying from hunger.")
+	
+	# TODO: thirst increase.
+	# TODO: reproduction increase.
 	
 	if current_path != null and current_path.size() > 0:
 		var next_tile = current_path.pop_front()

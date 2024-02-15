@@ -2,12 +2,15 @@ TODO LIST
 
 - Make rabbit refresh their grass if another rabbit eats their target grass
 - Make rabbit go to nearest water to drink
+- Rabbit need decision (select a target tile based on highest need)
+- Rabbits reproduction system
+- Rabbits age system
+- Rabbits death (any gauge > 1.0, or too old)
 - Rabbit gauges:
 	- Hunger
 	- Thirst
+	- Reproduction
 	
-- Factorize A* in a separate script
-- Factorize Tilemap functions in a separate script
 - Deterministic random
 - Camera motion (zoom and pan)
 - Better map shape (using cellular automaton?)
