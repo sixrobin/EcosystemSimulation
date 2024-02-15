@@ -43,6 +43,7 @@ func add_grass(tile: Tile) -> Grass:
 	var new_grass := grass_scene.instantiate() as Grass
 	new_grass.set_tile(tile)
 	add_child(new_grass)
+	grasses.append(new_grass)
 	return new_grass
 
 
@@ -85,7 +86,6 @@ func _ready() -> void:
 			grass_tile = tilemap.get_random_tile()
 		
 		var new_grass = add_grass(grass_tile)
-		grasses.append(new_grass)
 		
 	for rabbit in rabbits:
 		rabbit.target_closest_grass()

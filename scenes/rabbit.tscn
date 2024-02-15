@@ -5,32 +5,35 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nwtlo"]
 albedo_color = Color(0, 0, 0, 1)
 
-[node name="Rabbit" type="Node3D"]
+[node name="Rabbit" type="Node3D" node_paths=PackedStringArray("view_world")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.1, 0)
 script = ExtResource("1_ls0cy")
+view_world = NodePath("View_World")
 height_offset = 0.2
 
-[node name="Body" type="CSGBox3D" parent="."]
+[node name="View_World" type="Node3D" parent="."]
+
+[node name="Body" type="CSGBox3D" parent="View_World"]
 size = Vector3(0.4, 0.4, 0.4)
 
-[node name="Tail" type="CSGBox3D" parent="."]
+[node name="Tail" type="CSGBox3D" parent="View_World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0.25)
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Eye1" type="CSGBox3D" parent="."]
+[node name="Eye1" type="CSGBox3D" parent="View_World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.079, 0.045, -0.151)
 material_override = SubResource("StandardMaterial3D_nwtlo")
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Eye2" type="CSGBox3D" parent="."]
+[node name="Eye2" type="CSGBox3D" parent="View_World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.079, 0.045, -0.151)
 material_override = SubResource("StandardMaterial3D_nwtlo")
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Ear1" type="CSGBox3D" parent="."]
+[node name="Ear1" type="CSGBox3D" parent="View_World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, -0.15)
 size = Vector3(0.1, 0.2, 0.1)
 
-[node name="Ear2" type="CSGBox3D" parent="."]
+[node name="Ear2" type="CSGBox3D" parent="View_World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3, -0.15)
 size = Vector3(0.1, 0.2, 0.1)
