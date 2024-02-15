@@ -7,7 +7,7 @@ extends Node3D
 
 var tile: Tile
 var target_grass: Grass
-var current_path: Array[Tile]
+var current_path: Array = []
 
 
 func step(simulation_type: Simulation.SimulationType) -> void:
@@ -75,5 +75,6 @@ func target_closest_grass() -> void:
 	if target_grass == null:
 		return
 	var simulation := get_parent() as Simulation
-	current_path = simulation.a_star(tile, target_grass.tile)
-	current_path.remove_at(0)
+	current_path = simulation.a_star.try_find_path(tile, target_grass.tile)
+	if current_path.size() > 0:
+		current_path.remove_at(0)

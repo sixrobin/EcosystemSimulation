@@ -19,6 +19,7 @@ enum SimulationType
 @export var tile_scene: PackedScene
 @export var rabbit_scene: PackedScene
 @export var grass_scene: PackedScene
+@export var a_star: AStar
 
 @export_group("Grid settings")
 @export var grid_size: Vector2i
@@ -39,57 +40,6 @@ func get_tile(x: int, y: int) -> Tile:
 
 func get_random_tile() -> Tile:
 	return tiles.pick_random() as Tile
-
-
-func a_star(src: Tile, dst: Tile) -> Array[Tile]:
-	if src == dst:
-		return [src, dst]
-		
-	for t in tiles:
-		t.g_cost = 0
-		t.h_cost = 0
-	
-	var close_set: Array[Tile]
-	var open_set := [src]
-
-	while open_set.size() > 0:
-		var current = open_set.pop_front() as Tile
-		if current == dst:
-			return a_star_retrace(src, dst)
-
-		close_set.append(current)
-
-		for neighbour in current.neighbours:
-			if close_set.has(neighbour):
-				continue
-
-			var neighbour_cost = neighbour.a_star_cost_to(current)
-			if neighbour_cost == -1:
-				continue
-				
-			var cost = current.g_cost + neighbour.a_star_cost_to(current)
-			if cost < neighbour.g_cost or not open_set.has(neighbour):
-				neighbour.g_cost = cost
-				neighbour.h_cost = current.g_cost + neighbour.a_star_cost_to(current)
-				neighbour.a_star_parent = current
-
-				if not open_set.has(neighbour):
-					open_set.append(neighbour)
-
-	print("A* error: No path found!");
-	return [null]
-
-func a_star_retrace(src: Tile, dst: Tile) -> Array[Tile]:
-	var path: Array[Tile]
-	var current = dst
-	
-	while current != src:
-		path.append(current)
-		current = current.a_star_parent
-		
-	path.append(src)
-	path.reverse()
-	return path
 
 
 func add_tile(x: int, y: int) -> Tile:
