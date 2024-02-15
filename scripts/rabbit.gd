@@ -4,17 +4,24 @@ extends Node3D
 
 @export_group("References")
 @export var view_world: Node3D
+@export var gauge_hunger: Gauge
 
 @export_group("Settings")
+@export var full_hunger_steps := 100
 @export var height_offset := 0.5
 @export var move_duration := 0.5
 
 var tile: Tile
+var hunger := 0.0
 var target_grass: Grass
 var current_path: Array = []
 
 
 func step(simulation_type: Simulation.SimulationType) -> void:
+	hunger += 1.0 / full_hunger_steps
+	if hunger > 1.0:
+		print("Dying from hunger.")
+	
 	if current_path != null and current_path.size() > 0:
 		var next_tile = current_path.pop_front()
 		set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)

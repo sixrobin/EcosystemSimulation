@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ds7nay3nlxvhd"]
+
+[ext_resource type="Texture2D" uid="uid://bfc87xvl8l8hs" path="res://textures/icon_hunger.png" id="1_kyipg"]
+[ext_resource type="Script" path="res://scripts/gauge.gd" id="1_vexvc"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_784rn"]
+
+[node name="Gauge" type="Node3D" node_paths=PackedStringArray("slider")]
+script = ExtResource("1_vexvc")
+slider = NodePath("Gauge_Slider")
+
+[node name="Gauge_Slider" type="Sprite3D" parent="."]
+transform = Transform3D(40.58, 0, 0, 0, 11.835, 0, 0, 0, 1, 0.101332, -0.0570771, 0)
+centered = false
+modulate = Color(0.941176, 0, 0.223529, 1)
+texture = SubResource("CanvasTexture_784rn")
+
+[node name="Gauge_Icon" type="Sprite3D" parent="."]
+transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, -0.017, 0.005, 0)
+texture = ExtResource("1_kyipg")
