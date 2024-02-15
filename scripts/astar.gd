@@ -9,7 +9,7 @@ func try_find_path(src: Tile, dst: Tile) -> Array:
 	if src == dst:
 		return [src, dst]
 		
-	for tile in simulation.tiles:
+	for tile in simulation.tilemap.tiles:
 		tile.g_cost = 0
 		tile.h_cost = 0
 	

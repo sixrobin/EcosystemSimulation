@@ -18,6 +18,7 @@ enum TileType
 @export var next_grass_timer_min_max := Vector2i(5, 25)
 @export var discard_grass := false
 
+var simulation: Simulation
 var type: TileType
 var x := -1
 var y := -1
@@ -42,13 +43,12 @@ func add_neighbour(new_neighbour: Tile) -> void:
 
 
 func step(total_steps: int) -> void:
-	return
 	if steps_until_grass > 0:
 		steps_until_grass -= 1
 		if steps_until_grass == 0:
 			steps_until_grass = -1
 			if can_add_grass():
-				(get_parent() as Simulation).add_grass(self)
+				simulation.add_grass(self)
 
 
 func a_star_cost_to(neighbour: Tile) -> int:

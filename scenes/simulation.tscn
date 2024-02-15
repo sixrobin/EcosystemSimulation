@@ -1,21 +1,20 @@
-[gd_scene load_steps=6 format=3 uid="uid://d1dbgisroldo2"]
+[gd_scene load_steps=7 format=3 uid="uid://d1dbgisroldo2"]
 
 [ext_resource type="Script" path="res://scripts/simulation.gd" id="1_ysqbh"]
 [ext_resource type="PackedScene" uid="uid://df42422dtmsi7" path="res://scenes/tile.tscn" id="2_xi1ts"]
 [ext_resource type="PackedScene" uid="uid://dsso16qkboult" path="res://scenes/rabbit.tscn" id="3_hu3ma"]
 [ext_resource type="PackedScene" uid="uid://clc1ietxbg1ja" path="res://scenes/grass.tscn" id="4_dtcnq"]
+[ext_resource type="Script" path="res://scripts/tilemap.gd" id="5_7j8u5"]
 [ext_resource type="Script" path="res://scripts/astar.gd" id="5_e082a"]
 
-[node name="Simulation" type="Node3D" node_paths=PackedStringArray("a_star")]
+[node name="Simulation" type="Node3D" node_paths=PackedStringArray("tilemap", "a_star")]
 script = ExtResource("1_ysqbh")
 simulation_type = 2
 step_delay = 0.25
-tile_scene = ExtResource("2_xi1ts")
 rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")
+tilemap = NodePath("Tilemap")
 a_star = NodePath("A*")
-grid_size = Vector2i(30, 30)
-spacing = 0.4
 init_rabbits = 2
 init_grasses = 5
 water_chance = 0.2
@@ -25,6 +24,12 @@ transform = Transform3D(-1, 0, 0, 0, 0.514873, 0.857266, 0, -0.857266, 0.514873,
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
+
+[node name="Tilemap" type="Node" parent="."]
+script = ExtResource("5_7j8u5")
+tile_scene = ExtResource("2_xi1ts")
+size = Vector2i(25, 25)
+spacing = 0.4
 
 [node name="A*" type="Node" parent="."]
 script = ExtResource("5_e082a")
