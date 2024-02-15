@@ -12,7 +12,6 @@ var current_path: Array[Tile]
 
 func step(simulation_type: Simulation.SimulationType) -> void:
 	if current_path != null and current_path.size() > 0:
-		print("Rabbit step.")
 		var next_tile = current_path.pop_front()
 		set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
 
@@ -26,6 +25,7 @@ func set_tile(new_tile: Tile, instantly: bool) -> void:
 		look_at(tile.position + Vector3(0.0, height_offset, 0.0))
 		position = tile.position
 		position.y += height_offset
+		on_tile_reached()
 	else:
 		move_to_tile(tile)
 
@@ -43,13 +43,24 @@ func move_to_tile(new_tile: Tile) -> void:
 		position = (1.0 - t) * previous_position + t * target_position
 	
 	position = target_position
+	on_tile_reached()
+		
+
+func on_tile_reached() -> void:
+	if tile.grass != null:
+		tile.grass.eat(self)
+		target_closest_grass()
 
 
 func get_closest_grass() -> Grass:
+	var simulation := get_parent() as Simulation
+	
+	if simulation.grasses.size() == 0:
+		return null
+		
 	var closest_grass: Grass
 	var closest_grass_distance := (1 << 63) - 1
 	
-	var simulation := get_parent() as Simulation
 	for grass in simulation.grasses:
 		var to_grass := Vector2i(grass.tile.coords() - tile.coords())
 		var grass_distance := to_grass.length()
@@ -58,31 +69,11 @@ func get_closest_grass() -> Grass:
 			closest_grass = grass
 	
 	return closest_grass
-	
-func get_farthest_grass() -> Grass:
-	var farthest_grass: Grass
-	var farthest_grass_distance := 0
-	
-	var simulation := get_parent() as Simulation
-	for grass in simulation.grasses:
-		var to_grass := Vector2i(grass.tile.coords() - tile.coords())
-		var grass_distance := to_grass.length()
-		if grass_distance > farthest_grass_distance:
-			farthest_grass_distance = grass_distance
-			farthest_grass = grass
-	
-	return farthest_grass
 
-func look_at_closest_grass() -> void:
+func target_closest_grass() -> void:
 	target_grass = get_closest_grass()
+	if target_grass == null:
+		return
 	var simulation := get_parent() as Simulation
 	current_path = simulation.a_star(tile, target_grass.tile)
 	current_path.remove_at(0)
-	look_at(target_grass.position)
-
-func look_at_farthest_grass() -> void:
-	target_grass = get_farthest_grass()
-	var simulation := get_parent() as Simulation
-	current_path = simulation.a_star(tile, target_grass.tile)
-	current_path.remove_at(0)
-	look_at(target_grass.position)

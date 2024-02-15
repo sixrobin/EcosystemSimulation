@@ -173,7 +173,7 @@ func _ready() -> void:
 		grasses.append(new_grass)
 		
 	for r in rabbits:
-		r.look_at_closest_grass()
+		r.target_closest_grass()
 
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.

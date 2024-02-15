@@ -8,18 +8,17 @@
 [node name="Simulation" type="Node3D"]
 script = ExtResource("1_ysqbh")
 simulation_type = 2
-step_delay = 0.25
+step_delay = 0.2
 tile_scene = ExtResource("2_xi1ts")
 rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")
-grid_size = Vector2i(30, 30)
+grid_size = Vector2i(20, 20)
 spacing = 0.4
-init_rabbits = 2
-init_grasses = 5
-water_chance = 0.2
+init_rabbits = 3
+water_chance = 0.3
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 0.514873, 0.857266, 0, -0.857266, 0.514873, 0, 6.72436, 6.06037)
+transform = Transform3D(-1, 0, 0, 0, 0.637733, 0.770257, 0, -0.770257, 0.637733, 0, 5, 5)
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
