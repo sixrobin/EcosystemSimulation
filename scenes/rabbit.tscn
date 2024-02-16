@@ -12,6 +12,7 @@ script = ExtResource("1_ls0cy")
 view_world = NodePath("View_World")
 gauge_hunger = NodePath("View_Gauges/Gauge_Hunger")
 gauge_thirst = NodePath("View_Gauges/Gauge_Thirst")
+full_hunger_steps = 70
 height_offset = 0.2
 
 [node name="View_World" type="Node3D" parent="."]

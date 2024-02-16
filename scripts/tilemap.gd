@@ -20,6 +20,10 @@ func get_random_tile() -> Tile:
 	return tiles.pick_random() as Tile
 
 
+func tiles_distance(a: Tile, b: Tile) -> int:
+	return absi(b.x - a.x) + absi(b.y - a.y)
+
+
 func add_tile(x: int, y: int) -> Tile:
 	var position := Vector3(x - size.x / 2.0, 0.0, y - size.y / 2.0)
 	if size.x % 2 == 0:

@@ -6,7 +6,7 @@ extends Node3D
 var tile: Tile
 
 
-func eat(rabbit: Rabbit) -> void:
+func remove() -> void:
 	tile.init_next_grass_timer()
 	
 	var simulation := get_parent() as Simulation
