@@ -88,7 +88,7 @@ func _ready() -> void:
 		var new_grass = add_grass(grass_tile)
 		
 	for rabbit in rabbits:
-		rabbit.target_closest_grass()
+		rabbit.init()
 
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.

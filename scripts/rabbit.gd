@@ -21,10 +21,14 @@ var target_grass: Grass
 var current_path: Array = []
 
 
+func init() -> void:
+	pass
+
+
 func step(simulation_type: Simulation.SimulationType) -> void:
-	hunger += 1.0 / full_hunger_steps
-	if hunger > 1.0:
-		print("Dying from hunger.")
+	set_hunger(hunger + 1.0 / full_hunger_steps)
+	if hunger < 1.0 and hunger > 0.2: # TODO: Expose value.
+		target_closest_grass()
 	
 	# TODO: thirst increase.
 	# TODO: reproduction increase.
@@ -32,6 +36,24 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 	if current_path != null and current_path.size() > 0:
 		var next_tile = current_path.pop_front()
 		set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
+
+
+func kill() -> void:
+	var simulation := get_parent() as Simulation
+	var rabbit_index := simulation.rabbits.find(self)
+	simulation.rabbits.remove_at(rabbit_index)
+	
+	tile.rabbit = null
+	queue_free()
+
+
+func set_hunger(value: float) -> void:
+	hunger = value
+	if hunger >= 1.0:
+		kill()
+		return
+	
+	gauge_hunger.set_value(hunger)
 
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
@@ -67,7 +89,7 @@ func move_to_tile(new_tile: Tile) -> void:
 func on_tile_reached() -> void:
 	if tile.grass != null:
 		tile.grass.eat(self)
-		target_closest_grass()
+		set_hunger(0.0)
 
 
 func get_closest_grass() -> Grass:
