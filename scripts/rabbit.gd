@@ -55,8 +55,6 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 			else:
 				current_need = NeedType.THIRST
 				target_closest_water()
-				print(simulation.tilemap.tiles_distance(tile, target_tile))
-				print(current_path.size())
 		# TODO: reproduction increase.
 	
 	if current_path != null and current_path.size() > 0:
