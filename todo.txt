@@ -1,12 +1,10 @@
 TODO LIST
 
 - Make rabbit refresh their grass if another rabbit eats their target grass
-- Make rabbit go to nearest water to drink
 - Rabbit need decision (select a target tile based on highest need)
 - Rabbits reproduction system
 - Rabbits age system
 - Rabbit gauges:
-	- Thirst
 	- Reproduction
 	
 - Deterministic random

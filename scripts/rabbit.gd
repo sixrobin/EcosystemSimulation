@@ -127,7 +127,7 @@ func on_tile_reached() -> void:
 			target_tile = null
 			current_need = NeedType.NONE
 	elif current_need == NeedType.THIRST:
-		if target_tile != null and current_path.size() == 1:
+		if target_tile != null and current_path.size() == 0:
 			set_thirst(0.0)
 			current_path.clear()
 			target_tile = null
@@ -168,3 +168,4 @@ func target_closest_water() -> void:
 		current_path = simulation.a_star.try_find_path(tile, target_tile)
 		if current_path.size() > 0:
 			current_path.remove_at(0)
+			current_path.remove_at(current_path.size() - 1)
