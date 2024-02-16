@@ -5,20 +5,24 @@ extends Node3D
 @export_group("References")
 @export var view_world: Node3D
 @export var gauge_hunger: Gauge
-# TODO: gauge_thirst
+@export var gauge_thirst: Gauge
 # TODO: gauge_reproduction
 
 @export_group("Settings")
 @export var full_hunger_steps := 100
+@export var full_thirst_steps := 50
 @export var height_offset := 0.5
 @export var move_duration := 0.5
 
 var simulation: Simulation
+
 var tile: Tile
 var hunger := 0.0
-# TODO: thirst
+var thirst := 0.0
 # TODO: reproduction
+
 var target_grass: Grass
+var target_water: Tile
 var current_path: Array = []
 
 
@@ -28,10 +32,15 @@ func init() -> void:
 
 func step(simulation_type: Simulation.SimulationType) -> void:
 	set_hunger(hunger + 1.0 / full_hunger_steps)
-	if hunger < 1.0 and hunger > 0.2: # TODO: Expose value.
+	if hunger < 1.0 and hunger > 0.2 and target_grass == null and target_water == null:
+		print("hunger!")
 		target_closest_grass()
 	
-	# TODO: thirst increase.
+	set_thirst(thirst + 1.0 / full_thirst_steps)
+	if thirst < 1.0 and thirst > 0.2 and target_water == null and target_grass == null:
+		print("thirst!")
+		target_closest_water()
+	
 	# TODO: reproduction increase.
 	
 	if current_path != null and current_path.size() > 0:
@@ -54,6 +63,14 @@ func set_hunger(value: float) -> void:
 		return
 	
 	gauge_hunger.set_value(hunger)
+		
+func set_thirst(value: float) -> void:
+	thirst = value
+	if thirst >= 1.0:
+		kill()
+		return
+	
+	gauge_thirst.set_value(thirst)
 
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
@@ -90,6 +107,11 @@ func on_tile_reached() -> void:
 	if tile.grass != null:
 		tile.grass.eat(self)
 		set_hunger(0.0)
+		target_grass = null
+	
+	if target_water != null and current_path.size() == 0:
+		set_thirst(0.0)
+		target_water = null
 
 
 func get_closest_grass() -> Grass:
@@ -114,3 +136,14 @@ func target_closest_grass() -> void:
 		current_path = simulation.a_star.try_find_path(tile, target_grass.tile)
 		if current_path.size() > 0:
 			current_path.remove_at(0)
+			
+func target_closest_water() -> void:
+	var is_water := func(t):
+		return t.type == Tile.TileType.WATER
+		
+	target_water = simulation.tilemap.get_closest_tile(tile, is_water)
+	if target_water != null:
+		current_path = simulation.a_star.try_find_path(tile, target_water)
+		if current_path.size() > 0:
+			current_path.remove_at(0)
+			current_path.remove_at(current_path.size() - 1)

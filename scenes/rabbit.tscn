@@ -6,12 +6,12 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nwtlo"]
 albedo_color = Color(0, 0, 0, 1)
 
-[node name="Rabbit" type="Node3D" node_paths=PackedStringArray("view_world", "gauge_hunger")]
+[node name="Rabbit" type="Node3D" node_paths=PackedStringArray("view_world", "gauge_hunger", "gauge_thirst")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.1, 0)
 script = ExtResource("1_ls0cy")
 view_world = NodePath("View_World")
 gauge_hunger = NodePath("View_Gauges/Gauge_Hunger")
-full_hunger_steps = 50
+gauge_thirst = NodePath("View_Gauges/Gauge_Thirst")
 height_offset = 0.2
 
 [node name="View_World" type="Node3D" parent="."]
@@ -46,3 +46,7 @@ transform = Transform3D(-1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107,
 
 [node name="Gauge_Hunger" parent="View_Gauges" instance=ExtResource("2_kxx63")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.151106, 0.470511, 0)
+
+[node name="Gauge_Thirst" parent="View_Gauges" node_paths=PackedStringArray("slider") instance=ExtResource("2_kxx63")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.151106, 0.692661, 2.98023e-08)
+slider = NodePath("../Gauge_Hunger/Gauge_Slider")

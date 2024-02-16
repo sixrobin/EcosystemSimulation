@@ -34,6 +34,7 @@ var steps := 0
 
 func add_rabbit(tile: Tile) -> Rabbit:
 	var new_rabbit := rabbit_scene.instantiate() as Rabbit
+	new_rabbit.name = "Rabbit_{i}".format({"i": rabbits.size()})
 	new_rabbit.set_tile(tile, true)
 	add_child(new_rabbit)
 	return new_rabbit

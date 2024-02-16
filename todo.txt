@@ -5,9 +5,7 @@ TODO LIST
 - Rabbit need decision (select a target tile based on highest need)
 - Rabbits reproduction system
 - Rabbits age system
-- Rabbits death (any gauge > 1.0, or too old)
 - Rabbit gauges:
-	- Hunger
 	- Thirst
 	- Reproduction
 	

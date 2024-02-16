@@ -43,7 +43,6 @@ func add_neighbour(new_neighbour: Tile) -> void:
 
 
 func step(total_steps: int) -> void:
-	return
 	if steps_until_grass > 0:
 		steps_until_grass -= 1
 		if steps_until_grass == 0:
