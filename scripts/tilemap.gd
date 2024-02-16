@@ -50,3 +50,22 @@ func init_neighbours() -> void:
 			tile.add_neighbour(get_tile(tile.x - 1, tile.y))
 		if tile.y > 0:
 			tile.add_neighbour(get_tile(tile.x, tile.y - 1))
+
+
+func get_closest_tile(src: Tile, condition) -> Tile:
+	var close_set: Array = []
+	var open_set := [src]
+	
+	while open_set.size() > 0:
+		var current := open_set.pop_front() as Tile
+		
+		if condition.call(current):
+			return current
+			
+		close_set.append(current)
+		
+		for neighbour in current.neighbours:
+			if not open_set.has(neighbour) and not close_set.has(neighbour):
+				open_set.append(neighbour)
+		
+	return null
