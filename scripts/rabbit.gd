@@ -13,6 +13,7 @@ extends Node3D
 @export var height_offset := 0.5
 @export var move_duration := 0.5
 
+var simulation: Simulation
 var tile: Tile
 var hunger := 0.0
 # TODO: thirst
@@ -22,7 +23,7 @@ var current_path: Array = []
 
 
 func init() -> void:
-	pass
+	simulation = get_parent() as Simulation
 
 
 func step(simulation_type: Simulation.SimulationType) -> void:
@@ -39,7 +40,6 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 
 
 func kill() -> void:
-	var simulation := get_parent() as Simulation
 	var rabbit_index := simulation.rabbits.find(self)
 	simulation.rabbits.remove_at(rabbit_index)
 	
@@ -93,8 +93,6 @@ func on_tile_reached() -> void:
 
 
 func get_closest_grass() -> Grass:
-	var simulation := get_parent() as Simulation
-	
 	if simulation.grasses.size() == 0:
 		return null
 		
@@ -112,9 +110,7 @@ func get_closest_grass() -> Grass:
 
 func target_closest_grass() -> void:
 	target_grass = get_closest_grass()
-	if target_grass == null:
-		return
-	var simulation := get_parent() as Simulation
-	current_path = simulation.a_star.try_find_path(tile, target_grass.tile)
-	if current_path.size() > 0:
-		current_path.remove_at(0)
+	if target_grass != null:
+		current_path = simulation.a_star.try_find_path(tile, target_grass.tile)
+		if current_path.size() > 0:
+			current_path.remove_at(0)
