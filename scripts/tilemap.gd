@@ -9,6 +9,7 @@ extends Node
 @export var size: Vector2i
 @export var spacing := 1.0
 
+@onready var simulation := get_parent() as Simulation
 var tiles: Array[Tile]
 
 
@@ -17,7 +18,7 @@ func get_tile(x: int, y: int) -> Tile:
 
 
 func get_random_tile() -> Tile:
-	return tiles.pick_random() as Tile
+	return tiles[simulation.rng.randi_range(0, tiles.size() - 1)] as Tile
 
 
 func tiles_distance(a: Tile, b: Tile) -> int:
@@ -36,7 +37,7 @@ func add_tile(x: int, y: int) -> Tile:
 	var new_tile := tile_scene.instantiate() as Tile
 	new_tile.name = "Tile_X{x}_Y{y}".format({"x": x, "y": y})
 	new_tile.position = position
-	new_tile.simulation = get_parent() as Simulation
+	new_tile.simulation = simulation
 	
 	tiles.append(new_tile)
 	add_child(new_tile)

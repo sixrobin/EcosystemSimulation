@@ -12,6 +12,7 @@ enum SimulationType
 
 
 @export_group("Simulation settings")
+@export var seed := 0
 @export var simulation_type := SimulationType.ANIMATED
 @export var step_delay := 1.5
 
@@ -26,6 +27,7 @@ enum SimulationType
 @export var init_grasses := 10
 @export_range(0.0, 1.0) var water_chance := 0.25
 
+var rng := RandomNumberGenerator.new()
 var rabbits: Array[Rabbit]
 var grasses: Array[Grass]
 var timer := 0.0
@@ -59,13 +61,14 @@ func step() -> void:
 
 
 func _ready() -> void:
-	# TODO: initialize random seed.
+	if seed != 0:
+		rng.seed = seed
 	
 	# Init tiles.
 	for x in tilemap.size.x:
 		for y in tilemap.size.y:
 			var new_tile := tilemap.add_tile(x, y)
-			new_tile.set_type(Tile.TileType.GROUND if randf() > water_chance else Tile.TileType.WATER)
+			new_tile.set_type(Tile.TileType.GROUND if rng.randf() > water_chance else Tile.TileType.WATER)
 			new_tile.set_coords(x, y)
 			new_tile.init_next_grass_timer()
 			

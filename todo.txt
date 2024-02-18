@@ -1,12 +1,10 @@
 TODO LIST
 
-- Make rabbit refresh their grass if another rabbit eats their target grass
-- Rabbit need decision (select a target tile based on highest need)
+- Debug.DrawRay from rabbit to its target tile if any
 - Rabbits reproduction system
 - Rabbits age system
 - Rabbit gauges:
 	- Reproduction
 	
-- Deterministic random
 - Camera motion (zoom and pan)
 - Better map shape (using cellular automaton?)

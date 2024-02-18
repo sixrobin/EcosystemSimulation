@@ -62,7 +62,7 @@ func a_star_cost_to(neighbour: Tile) -> int:
 func init_next_grass_timer() -> int:
 	var timer_min = next_grass_timer_min_max.x
 	var timer_max = next_grass_timer_min_max.y
-	steps_until_grass = randi_range(timer_min, timer_max)
+	steps_until_grass = simulation.rng.randi_range(timer_min, timer_max)
 	return steps_until_grass
 
 
