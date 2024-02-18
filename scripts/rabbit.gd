@@ -88,9 +88,9 @@ func set_thirst(value: float) -> void:
 
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
-	if tile != null: tile.rabbit = null
+	if tile != null: tile.set_rabbit(null)
 	tile = new_tile
-	if tile != null: tile.rabbit = self
+	if tile != null: tile.set_rabbit(self)
 	
 	if instantly:
 		view_world.look_at(tile.position + Vector3(0.0, height_offset, 0.0))
@@ -132,7 +132,7 @@ func on_tile_reached() -> void:
 			current_need = NeedType.NONE
 
 
-func get_closest_grass() -> Grass:
+func get_closest_grass(condition) -> Grass:
 	if simulation.grasses.size() == 0:
 		return null
 		
@@ -140,6 +140,9 @@ func get_closest_grass() -> Grass:
 	var closest_grass_distance := (1 << 63) - 1
 	
 	for grass in simulation.grasses:
+		if not condition.call(grass):
+			continue
+		
 		var to_grass := Vector2i(grass.tile.coords() - tile.coords())
 		var grass_distance := to_grass.length()
 		if grass_distance < closest_grass_distance:
@@ -154,11 +157,17 @@ func get_closest_water() -> Tile:
 	return simulation.tilemap.get_closest_tile(tile, is_water)
 
 func target_closest_grass() -> void:
-	target_tile = get_closest_grass().tile
-	if target_tile != null:
-		current_path = simulation.a_star.try_find_path(tile, target_tile)
-		if current_path.size() > 0:
-			current_path.remove_at(0)
+	var is_grass_available := func(g):
+		return g.targetting_rabbit == null
+	var closest_grass := get_closest_grass(is_grass_available)
+	if closest_grass == null:
+		return
+		
+	closest_grass.set_targetting_rabbit(self)
+	target_tile = closest_grass.tile
+	current_path = simulation.a_star.try_find_path(tile, target_tile)
+	if current_path.size() > 0:
+		current_path.remove_at(0)
 			
 func target_closest_water() -> void:
 	target_tile = get_closest_water()

@@ -4,6 +4,7 @@ extends Node3D
 
 @export var height_offset := 0.5
 var tile: Tile
+var targetting_rabbit: Rabbit
 
 
 func remove() -> void:
@@ -15,6 +16,10 @@ func remove() -> void:
 	
 	tile.grass = null
 	queue_free()
+
+
+func set_targetting_rabbit(rabbit: Rabbit) -> void:
+	targetting_rabbit = rabbit
 
 
 func set_tile(new_tile: Tile) -> void:
