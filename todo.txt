@@ -1,6 +1,5 @@
 TODO LIST
 
-- Debug.DrawRay from rabbit to its target tile if any
 - Rabbits reproduction system
 - Rabbits age system
 - Rabbit gauges:
