@@ -15,6 +15,7 @@ enum SimulationType
 @export var seed := 0
 @export var simulation_type := SimulationType.ANIMATED
 @export var step_delay := 1.5
+@export_range(0.0, 1.0) var female_percentage := 0.5
 
 @export_group("References")
 @export var rabbit_scene: PackedScene
@@ -38,6 +39,7 @@ func add_rabbit(tile: Tile) -> Rabbit:
 	var new_rabbit := rabbit_scene.instantiate() as Rabbit
 	new_rabbit.name = "Rabbit_{i}".format({"i": rabbits.size()})
 	new_rabbit.set_tile(tile, true)
+	new_rabbit.set_gender(Rabbit.Gender.MALE if rng.randf() > female_percentage else Rabbit.Gender.FEMALE)
 	add_child(new_rabbit)
 	return new_rabbit
 

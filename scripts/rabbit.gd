@@ -10,9 +10,18 @@ enum NeedType
 	REPRODUCTION,
 }
 
+enum Gender
+{
+	NONE = -1,
+	MALE,
+	FEMALE
+}
+
 
 @export_group("References")
 @export var view_world: Node3D
+@export var view_male: Node3D
+@export var view_female: Node3D
 @export var gauge_hunger: Gauge
 @export var gauge_thirst: Gauge
 # TODO: gauge_reproduction
@@ -25,6 +34,7 @@ enum NeedType
 
 var simulation: Simulation
 var tile: Tile
+var gender := Gender.NONE
 
 var current_need := NeedType.NONE
 var hunger := 0.0
@@ -99,6 +109,16 @@ func set_tile(new_tile: Tile, instantly: bool) -> void:
 		on_tile_reached()
 	else:
 		move_to_tile(tile)
+
+
+func set_gender(new_gender: Gender):
+	gender = new_gender
+	
+	view_male.set_process(gender == Gender.MALE)
+	view_male.visible = gender == Gender.MALE
+	
+	view_female.set_process(gender == Gender.FEMALE)
+	view_female.visible = gender == Gender.FEMALE
 
 
 func move_to_tile(new_tile: Tile) -> void:

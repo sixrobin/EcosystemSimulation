@@ -10,13 +10,13 @@
 
 [node name="Simulation" type="Node3D" node_paths=PackedStringArray("tilemap", "a_star")]
 script = ExtResource("1_ysqbh")
+seed = null
 simulation_type = 2
-step_delay = 0.1
+step_delay = 0.2
 rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")
 tilemap = NodePath("Tilemap")
 a_star = NodePath("A*")
-init_rabbits = 5
 init_grasses = 5
 water_chance = 0.15
 

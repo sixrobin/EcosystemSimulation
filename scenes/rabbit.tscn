@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dsso16qkboult"]
+[gd_scene load_steps=5 format=3 uid="uid://dsso16qkboult"]
 
 [ext_resource type="Script" path="res://scripts/rabbit.gd" id="1_ls0cy"]
 [ext_resource type="PackedScene" uid="uid://ds7nay3nlxvhd" path="res://scenes/gauge.tscn" id="2_kxx63"]
@@ -6,10 +6,17 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nwtlo"]
 albedo_color = Color(0, 0, 0, 1)
 
-[node name="Rabbit" type="Node3D" node_paths=PackedStringArray("view_world", "gauge_hunger", "gauge_thirst")]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5t6y7"]
+albedo_color = Color(1, 0.721569, 0.317647, 1)
+metallic_specular = 0.0
+roughness = 0.0
+
+[node name="Rabbit" type="Node3D" node_paths=PackedStringArray("view_world", "view_male", "view_female", "gauge_hunger", "gauge_thirst")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.1, 0)
 script = ExtResource("1_ls0cy")
 view_world = NodePath("View_World")
+view_male = NodePath("View_World/View_World_Male")
+view_female = NodePath("View_World/View_World_Female")
 gauge_hunger = NodePath("View_Gauges/Gauge_Hunger")
 gauge_thirst = NodePath("View_Gauges/Gauge_Thirst")
 full_hunger_steps = 70
@@ -17,29 +24,63 @@ height_offset = 0.2
 
 [node name="View_World" type="Node3D" parent="."]
 
-[node name="Body" type="CSGBox3D" parent="View_World"]
+[node name="View_World_Male" type="Node3D" parent="View_World"]
+
+[node name="Body" type="CSGBox3D" parent="View_World/View_World_Male"]
 size = Vector3(0.4, 0.4, 0.4)
 
-[node name="Tail" type="CSGBox3D" parent="View_World"]
+[node name="Tail" type="CSGBox3D" parent="View_World/View_World_Male"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0.25)
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Eye1" type="CSGBox3D" parent="View_World"]
+[node name="Eye1" type="CSGBox3D" parent="View_World/View_World_Male"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.079, 0.045, -0.151)
 material_override = SubResource("StandardMaterial3D_nwtlo")
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Eye2" type="CSGBox3D" parent="View_World"]
+[node name="Eye2" type="CSGBox3D" parent="View_World/View_World_Male"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.079, 0.045, -0.151)
 material_override = SubResource("StandardMaterial3D_nwtlo")
 size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Ear1" type="CSGBox3D" parent="View_World"]
+[node name="Ear1" type="CSGBox3D" parent="View_World/View_World_Male"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, -0.15)
 size = Vector3(0.1, 0.2, 0.1)
 
-[node name="Ear2" type="CSGBox3D" parent="View_World"]
+[node name="Ear2" type="CSGBox3D" parent="View_World/View_World_Male"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3, -0.15)
+size = Vector3(0.1, 0.2, 0.1)
+
+[node name="View_World_Female" type="Node3D" parent="View_World"]
+visible = false
+
+[node name="Body" type="CSGBox3D" parent="View_World/View_World_Female"]
+material_override = SubResource("StandardMaterial3D_5t6y7")
+size = Vector3(0.4, 0.4, 0.4)
+
+[node name="Tail" type="CSGBox3D" parent="View_World/View_World_Female"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0.25)
+material_override = SubResource("StandardMaterial3D_5t6y7")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Eye1" type="CSGBox3D" parent="View_World/View_World_Female"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.079, 0.045, -0.151)
+material_override = SubResource("StandardMaterial3D_nwtlo")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Eye2" type="CSGBox3D" parent="View_World/View_World_Female"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.079, 0.045, -0.151)
+material_override = SubResource("StandardMaterial3D_nwtlo")
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Ear1" type="CSGBox3D" parent="View_World/View_World_Female"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.3, -0.15)
+material_override = SubResource("StandardMaterial3D_5t6y7")
+size = Vector3(0.1, 0.2, 0.1)
+
+[node name="Ear2" type="CSGBox3D" parent="View_World/View_World_Female"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3, -0.15)
+material_override = SubResource("StandardMaterial3D_5t6y7")
 size = Vector3(0.1, 0.2, 0.1)
 
 [node name="View_Gauges" type="Node3D" parent="."]
