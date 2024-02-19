@@ -6,7 +6,6 @@ extends Node2D
 
 
 func draw_rabbits_targets() -> void:
-	print("draw_rabbits_targets")
 	for rabbit in simulation.rabbits:
 		var rabbit_target := rabbit.target_tile
 		if rabbit_target == null:
