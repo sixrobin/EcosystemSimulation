@@ -10,7 +10,6 @@
 
 [node name="Simulation" type="Node3D" node_paths=PackedStringArray("tilemap", "a_star")]
 script = ExtResource("1_ysqbh")
-seed = null
 simulation_type = 2
 step_delay = 0.2
 rabbit_scene = ExtResource("3_hu3ma")

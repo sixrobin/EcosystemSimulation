@@ -64,7 +64,7 @@ func step() -> void:
 
 func _ready() -> void:
 	rng.seed = seed if (seed != 0) else randi_range(-65635, 65635)
-	print("Simulation seed " + str(rng.seed))
+	print("Simulation seed: {seed}".format({"seed": str(rng.seed)}))
 	
 	# Init tiles.
 	for x in tilemap.size.x:

@@ -24,7 +24,7 @@ enum Gender
 @export var view_female: Node3D
 @export var gauge_hunger: Gauge
 @export var gauge_thirst: Gauge
-# TODO: gauge_reproduction
+@export var gauge_reproduction: Gauge
 
 @export_group("Settings")
 @export var full_hunger_steps := 100
@@ -39,7 +39,7 @@ var gender := Gender.NONE
 var current_need := NeedType.NONE
 var hunger := 0.0
 var thirst := 0.0
-# TODO: reproduction
+var reproduction := 0.0
 
 var target_tile: Tile
 var current_path: Array = []
@@ -52,12 +52,14 @@ func init() -> void:
 func step(simulation_type: Simulation.SimulationType) -> void:
 	set_hunger(hunger + 1.0 / full_hunger_steps)
 	set_thirst(thirst + 1.0 / full_thirst_steps)
+	set_thirst(thirst + 1.0 / full_thirst_steps)
 	
 	if target_tile == null:
-		if hunger < 1.0 and hunger > 0.2:
+		# TODO: expose values.
+		if hunger < 1.0 and hunger > 0.3:
 			current_need = NeedType.HUNGER
 			target_closest_grass()
-		elif thirst < 1.0 and thirst > 0.2:
+		elif thirst < 1.0 and thirst > 0.1:
 			var closest_water := get_closest_water()
 			if simulation.tilemap.tiles_distance(tile, closest_water) == 1:
 				set_thirst(0.0)
@@ -65,7 +67,9 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 			else:
 				current_need = NeedType.THIRST
 				target_closest_water()
-		# TODO: reproduction increase.
+		elif reproduction < 1.0 and reproduction > 0.5:
+			current_need = NeedType.REPRODUCTION
+			look_for_partner()
 	
 	if current_path != null and current_path.size() > 0:
 		var next_tile = current_path.pop_front()
@@ -96,6 +100,14 @@ func set_thirst(value: float) -> void:
 	
 	gauge_thirst.set_value(thirst)
 
+func set_reproduction(value: float) -> void:
+	reproduction = value
+	if reproduction >= 1.0:
+		kill()
+		return
+	
+	gauge_reproduction.set_value(reproduction)
+	
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
 	if tile != null: tile.set_rabbit(null)
@@ -196,3 +208,7 @@ func target_closest_water() -> void:
 		if current_path.size() > 0:
 			current_path.remove_at(0)
 			current_path.remove_at(current_path.size() - 1)
+
+func look_for_partner() -> void:
+	# TODO.
+	pass
