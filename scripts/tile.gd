@@ -51,10 +51,10 @@ func step(total_steps: int) -> void:
 				simulation.add_grass(self)
 
 
-func a_star_cost_to(neighbour: Tile) -> int:
+func a_star_cost_to(agent, neighbour: Tile) -> int:
 	if neighbour.type == TileType.WATER:
 		return -1
-	if neighbour.grass != null:
+	if neighbour.rabbit != null and agent != neighbour.rabbit:
 		return -1
 	return 1
 

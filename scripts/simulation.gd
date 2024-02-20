@@ -43,6 +43,11 @@ func add_rabbit(tile: Tile) -> Rabbit:
 	add_child(new_rabbit)
 	return new_rabbit
 
+func remove_rabbit(rabbit: Rabbit) -> void:
+	rabbits.remove_at(rabbits.find(self))
+	rabbit.tile.rabbit = null
+	rabbit.queue_free()
+
 
 func add_grass(tile: Tile) -> Grass:
 	var new_grass := grass_scene.instantiate() as Grass
@@ -50,6 +55,12 @@ func add_grass(tile: Tile) -> Grass:
 	add_child(new_grass)
 	grasses.append(new_grass)
 	return new_grass
+	
+func remove_grass(grass: Grass) -> void:
+	grass.tile.init_next_grass_timer()
+	grasses.remove_at(grasses.find(self))
+	grass.tile.grass = null
+	grass.queue_free()
 
 
 func step() -> void:
@@ -59,7 +70,8 @@ func step() -> void:
 		tile.step(steps)
 		
 	for rabbit in rabbits:
-		rabbit.step(simulation_type)
+		if rabbit != null:
+			rabbit.step(simulation_type)
 
 
 func _ready() -> void:

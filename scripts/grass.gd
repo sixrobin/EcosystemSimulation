@@ -8,14 +8,8 @@ var targetting_rabbit: Rabbit
 
 
 func remove() -> void:
-	tile.init_next_grass_timer()
-	
 	var simulation := get_parent() as Simulation
-	var grass_index := simulation.grasses.find(self)
-	simulation.grasses.remove_at(grass_index)
-	
-	tile.grass = null
-	queue_free()
+	simulation.remove_grass(self)
 
 
 func set_targetting_rabbit(rabbit: Rabbit) -> void:

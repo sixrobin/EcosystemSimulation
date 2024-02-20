@@ -52,66 +52,75 @@ func init() -> void:
 
 
 func step(simulation_type: Simulation.SimulationType) -> void:
-	set_hunger(hunger + 1.0 / full_hunger_steps)
-	set_thirst(thirst + 1.0 / full_thirst_steps)
+	set_need_value(NeedType.HUNGER, hunger + 1.0 / full_hunger_steps)
+	set_need_value(NeedType.THIRST, thirst + 1.0 / full_thirst_steps)
 	if gender == Gender.MALE:
-		set_reproduction(reproduction + 1.0 / full_reproduction_steps)
+		set_need_value(NeedType.REPRODUCTION, reproduction + 1.0 / full_reproduction_steps)
 	
-	if target_tile == null and target_partner == null:
-		# TODO: expose values.
+	if current_need == NeedType.NONE:
 		if hunger < 1.0 and hunger > 0.3:
 			current_need = NeedType.HUNGER
-			target_closest_grass()
-		elif thirst < 1.0 and thirst > 0.1:
-			var closest_water := get_closest_water()
-			if simulation.tilemap.tiles_distance(tile, closest_water) == 1:
-				set_thirst(0.0)
-				current_path.clear()
-			else:
-				current_need = NeedType.THIRST
-				target_closest_water()
-		elif gender == Gender.MALE and reproduction < 1.0 and reproduction > 0.5:
+			target_or_eat_closest_grass()
+	if current_need == NeedType.NONE:
+		if thirst < 1.0 and thirst > 0.1:
+			current_need = NeedType.THIRST
+			target_or_drink_closest_water()
+	if current_need == NeedType.NONE:
+		if gender == Gender.MALE and reproduction < 1.0 and reproduction > 0.5:
 			current_need = NeedType.REPRODUCTION
 			look_for_partner()
-	
-	if current_path != null and current_path.size() > 0:
-		var next_tile = current_path.pop_front()
-		set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
-		
+
 	# Refresh path to partner as it could be moving.
-	if current_need == NeedType.REPRODUCTION and target_partner != null:
-		current_path = simulation.a_star.try_find_path(tile, target_partner.tile)
+	if gender == Gender.MALE and target_partner != null:
+		current_path = simulation.a_star.try_find_path(self, tile, target_partner.tile)
 		if current_path.size() > 0:
 			current_path.remove_at(0)
 			current_path.remove_at(current_path.size() - 1)
+	
+	if current_path.size() > 0:
+		var next_tile = current_path[0]
+		if next_tile.rabbit != null:
+			if current_need == NeedType.REPRODUCTION and next_tile.rabbit == target_partner:
+				fulfill_need(NeedType.REPRODUCTION)
+			else:
+				current_path = simulation.a_star.try_find_path(self, tile, current_path[current_path.size() - 1])
+				if current_path.size() > 0:
+					next_tile = current_path.pop_front()
+		if next_tile.rabbit == null:
+			current_path.remove_at(0)
+			set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
 
 
 func kill() -> void:
-	var rabbit_index := simulation.rabbits.find(self)
-	simulation.rabbits.remove_at(rabbit_index)
-	
-	tile.rabbit = null
-	queue_free()
+	print("{r} death (cause: {c}).".format({"r": name, "c": str(current_need)}))
+	simulation.remove_rabbit(self)
 
 
-func set_hunger(value: float) -> void:
-	hunger = value
-	gauge_hunger.set_value(hunger)
-	if hunger >= 1.0:
+func set_need_value(type: NeedType, value: float) -> void:
+	if value >= 1.0:
 		kill()
+		return
 		
-func set_thirst(value: float) -> void:
-	thirst = value
-	gauge_thirst.set_value(thirst)
-	if thirst >= 1.0:
-		kill()
+	if type == NeedType.HUNGER:
+		hunger = value
+		gauge_hunger.set_value(hunger)
+	elif type == NeedType.THIRST:
+		thirst = value
+		gauge_thirst.set_value(thirst)
+	elif type == NeedType.REPRODUCTION:
+		reproduction = value
+		gauge_reproduction.set_value(reproduction)
 
-func set_reproduction(value: float) -> void:
-	reproduction = value
-	gauge_reproduction.set_value(reproduction)
-	if reproduction >= 1.0:
-		kill()
+func fulfill_need(type: NeedType) -> void:
+	set_need_value(type, 0.0)
+	current_path.clear()
+	target_tile = null
+	current_need = NeedType.NONE
 	
+	if type == NeedType.REPRODUCTION:
+		target_partner.target_partner = null
+		target_partner = null
+
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
 	if tile != null: tile.set_rabbit(null)
@@ -154,74 +163,57 @@ func move_to_tile(new_tile: Tile) -> void:
 	
 	position = Vector3(target_position)
 	on_tile_reached()
-		
 
 func on_tile_reached() -> void:
-	if current_need == NeedType.HUNGER:
-		if tile.grass != null:
-			tile.grass.remove()
-			set_hunger(0.0)
-			target_tile = null
-			current_need = NeedType.NONE
+	if current_need == NeedType.HUNGER and tile.grass != null:
+		tile.grass.remove()
+		fulfill_need(NeedType.HUNGER)
 	elif current_need == NeedType.THIRST:
 		if target_tile != null and current_path.size() == 0:
-			set_thirst(0.0)
-			current_path.clear()
-			target_tile = null
-			current_need = NeedType.NONE
+			fulfill_need(NeedType.THIRST)
 	elif current_need == NeedType.REPRODUCTION:
 		if target_partner != null and current_path.size() == 0:
-			print("Partner found!")
-			set_reproduction(0.0)
-			current_path.clear()
-			target_partner = null
-			current_need = NeedType.NONE
+			print("Making a baby rabbit!") # TODO.
+			fulfill_need(NeedType.REPRODUCTION)
 
 
-func get_closest_grass(condition) -> Grass:
-	if simulation.grasses.size() == 0:
-		return null
+func target_or_eat_closest_grass() -> void:
+	var is_valid_grass_tile := func(t):
+		return t.grass != null and t.grass.targetting_rabbit == null
 		
-	var closest_grass: Grass
-	var closest_grass_distance := (1 << 63) - 1
-	
-	for grass in simulation.grasses:
-		if not condition.call(grass):
-			continue
-		
-		var to_grass := Vector2i(grass.tile.coords() - tile.coords())
-		var grass_distance := to_grass.length()
-		if grass_distance < closest_grass_distance:
-			closest_grass_distance = grass_distance
-			closest_grass = grass
-	
-	return closest_grass
-
-func get_closest_water() -> Tile:
-	var is_water := func(t):
-		return t.type == Tile.TileType.WATER
-	return simulation.tilemap.get_closest_tile(tile, is_water)
-
-func target_closest_grass() -> void:
-	var is_grass_available := func(g):
-		return g.targetting_rabbit == null
-	var closest_grass := get_closest_grass(is_grass_available)
-	if closest_grass == null:
+	var target_grass_tile := simulation.tilemap.get_closest_tile(tile, is_valid_grass_tile)
+	var target_grass := target_grass_tile.grass if target_grass_tile != null else null
+	if target_grass == null:
 		return
 		
-	closest_grass.set_targetting_rabbit(self)
-	target_tile = closest_grass.tile
-	current_path = simulation.a_star.try_find_path(tile, target_tile)
+	if simulation.tilemap.tiles_distance(tile, target_grass_tile) == 0:
+		tile.grass.remove()
+		fulfill_need(NeedType.HUNGER)
+		return
+		
+	target_grass.set_targetting_rabbit(self)
+	target_tile = target_grass_tile
+	
+	current_path = simulation.a_star.try_find_path(self, tile, target_tile)
 	if current_path.size() > 0:
 		current_path.remove_at(0)
 			
-func target_closest_water() -> void:
-	target_tile = get_closest_water()
-	if target_tile != null:
-		current_path = simulation.a_star.try_find_path(tile, target_tile)
-		if current_path.size() > 0:
-			current_path.remove_at(0)
-			current_path.remove_at(current_path.size() - 1)
+func target_or_drink_closest_water() -> void:
+	var is_water := func(t):
+		return t.type == Tile.TileType.WATER
+		
+	target_tile = simulation.tilemap.get_closest_tile(tile, is_water)
+	if target_tile == null:
+		return
+	
+	if simulation.tilemap.tiles_distance(tile, target_tile) == 1:
+		fulfill_need(NeedType.THIRST)
+		return
+		
+	current_path = simulation.a_star.try_find_path(self, tile, target_tile)
+	if current_path.size() > 0:
+		current_path.remove_at(0)
+		current_path.remove_at(current_path.size() - 1)
 
 func look_for_partner() -> void:
 	if simulation.rabbits.size() <= 1:
@@ -231,9 +223,10 @@ func look_for_partner() -> void:
 	var closest_partner_distance := (1 << 63) - 1
 	
 	for rabbit in simulation.rabbits:
-		if rabbit.gender == gender:
+		if rabbit == null:
 			continue
-		# TODO: already reproducing condition.
+		if rabbit.gender == gender or rabbit.target_partner != null:
+			continue
 		# TODO: minimum age condition.
 		
 		var to_rabbit := Vector2i(rabbit.tile.coords() - tile.coords())
@@ -245,7 +238,8 @@ func look_for_partner() -> void:
 	if closest_partner != null:
 		# TODO: If partner is on a neighbouring tile, reproduce instantly.
 		target_partner = closest_partner
-		current_path = simulation.a_star.try_find_path(tile, target_partner.tile)
+		target_partner.target_partner = self
+		current_path = simulation.a_star.try_find_path(self, tile, target_partner.tile)
 		if current_path.size() > 0:
 			current_path.remove_at(0)
 			current_path.remove_at(current_path.size() - 1)

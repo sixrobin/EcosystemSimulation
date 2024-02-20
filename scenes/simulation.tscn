@@ -11,14 +11,13 @@
 [node name="Simulation" type="Node3D" node_paths=PackedStringArray("tilemap", "a_star")]
 script = ExtResource("1_ysqbh")
 simulation_type = 2
-step_delay = 0.2
+step_delay = 0.1
 rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")
 tilemap = NodePath("Tilemap")
 a_star = NodePath("A*")
-init_rabbits = 2
 init_grasses = 5
-water_chance = 0.15
+water_chance = 0.1
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 0.514873, 0.857266, 0, -0.857266, 0.514873, 0, 5.03655, 4.90133)
@@ -29,7 +28,7 @@ transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -
 [node name="Tilemap" type="Node" parent="."]
 script = ExtResource("5_7j8u5")
 tile_scene = ExtResource("2_xi1ts")
-size = Vector2i(15, 15)
+size = Vector2i(25, 25)
 spacing = 0.4
 
 [node name="A*" type="Node" parent="."]

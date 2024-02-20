@@ -7,8 +7,10 @@ extends Node2D
 
 func draw_rabbits_targets() -> void:
 	for rabbit in simulation.rabbits:
+		if rabbit == null:
+			continue
+			
 		var rabbit_target := rabbit.target_tile
-		
 		if rabbit_target == null:
 			if rabbit.target_partner == null:
 				continue

@@ -5,7 +5,7 @@ extends Node
 var simulation: Simulation
 
 
-func try_find_path(src: Tile, dst: Tile) -> Array:
+func try_find_path(agent, src: Tile, dst: Tile) -> Array:
 	if src == dst:
 		return [src, dst]
 		
@@ -27,14 +27,14 @@ func try_find_path(src: Tile, dst: Tile) -> Array:
 			if close_set.has(neighbour):
 				continue
 
-			var neighbour_cost := neighbour.a_star_cost_to(current)
+			var neighbour_cost := neighbour.a_star_cost_to(agent, current)
 			if neighbour_cost == -1:
 				continue
 				
-			var cost := current.g_cost + neighbour.a_star_cost_to(current)
+			var cost := current.g_cost + neighbour_cost
 			if cost < neighbour.g_cost or not open_set.has(neighbour):
 				neighbour.g_cost = cost
-				neighbour.h_cost = current.g_cost + neighbour.a_star_cost_to(current)
+				neighbour.h_cost = current.g_cost + neighbour_cost
 				neighbour.a_star_parent = current
 
 				if not open_set.has(neighbour):
