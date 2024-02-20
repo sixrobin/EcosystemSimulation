@@ -1,5 +1,6 @@
 TODO LIST
 
+- Fix rabbit rotation with new view setup
 - Rabbits birth
 - Rabbit children caracteristics inheritance system
 - Rabbits age system (with death and adaptative scale)

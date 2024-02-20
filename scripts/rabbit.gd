@@ -30,7 +30,9 @@ enum Gender
 @export var full_hunger_steps := 100
 @export var full_thirst_steps := 50
 @export var full_reproduction_steps := 50
+@export_range(0.0, 1.0) var adult_age_percentage := 0.25
 @export var full_age_steps_min_max := Vector2i(1000, 1200)
+@export var native_rabbits_age_min_max := Vector2i(300, 400)
 
 @export_group("View settings")
 @export var height_offset := 0.5
@@ -54,7 +56,18 @@ var target_partner: Rabbit
 var current_path: Array = []
 
 
+func randomize_native_age() -> void:
+	age = simulation.rng.randi_range(native_rabbits_age_min_max.x, native_rabbits_age_min_max.y)
+
+
 func step(simulation_type: Simulation.SimulationType) -> void:
+	age += 1.0 / full_age_steps
+	if age > 1.0:
+		kill()
+		return
+		
+	# TODO: adjust scale based on age.
+	
 	set_need_value(NeedType.HUNGER, hunger + 1.0 / full_hunger_steps)
 	set_need_value(NeedType.THIRST, thirst + 1.0 / full_thirst_steps)
 	if gender == Gender.MALE:
@@ -69,12 +82,14 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 			current_need = NeedType.THIRST
 			target_or_drink_closest_water()
 	if current_need == NeedType.NONE:
+		# TODO: if is adult.
 		if gender == Gender.MALE and reproduction < 1.0 and reproduction > 0.5:
 			current_need = NeedType.REPRODUCTION
 			look_for_partner()
 
 	# Refresh path to partner as it could be moving.
 	if gender == Gender.MALE and target_partner != null:
+		# TODO: check if target partner is not dead.
 		current_path = simulation.a_star.try_find_path(self, tile, target_partner.tile)
 		if current_path.size() > 0:
 			current_path.remove_at(0)
@@ -95,7 +110,7 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 
 
 func kill() -> void:
-	print("{r} death (cause: {c}).".format({"r": name, "c": str(current_need)}))
+	print("{r} death.".format({"r": name}))
 	simulation.remove_rabbit(self)
 
 
