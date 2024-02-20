@@ -26,16 +26,23 @@ enum Gender
 @export var gauge_thirst: Gauge
 @export var gauge_reproduction: Gauge
 
-@export_group("Settings")
+@export_group("Simulation settings")
 @export var full_hunger_steps := 100
 @export var full_thirst_steps := 50
 @export var full_reproduction_steps := 50
+@export var full_age_steps_min_max := Vector2i(1000, 1200)
+
+@export_group("View settings")
 @export var height_offset := 0.5
 @export var move_duration := 0.5
+@export var min_age_scale := 0.2
 
-var simulation: Simulation
+
+@onready var simulation := get_parent() as Simulation
+@onready var full_age_steps := simulation.rng.randi_range(full_age_steps_min_max.x, full_age_steps_min_max.y)
 var tile: Tile
 var gender := Gender.NONE
+var age := 0.0
 
 var current_need := NeedType.NONE
 var hunger := 0.0
@@ -45,10 +52,6 @@ var reproduction := 0.0
 var target_tile: Tile
 var target_partner: Rabbit
 var current_path: Array = []
-
-
-func init() -> void:
-	simulation = get_parent() as Simulation
 
 
 func step(simulation_type: Simulation.SimulationType) -> void:

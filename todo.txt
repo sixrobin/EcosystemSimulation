@@ -1,9 +1,10 @@
 TODO LIST
 
-- Rabbits reproduction system
-- Rabbits age system
-- Rabbit gauges:
-	- Reproduction
-	
+- Rabbits birth
+- Rabbit children caracteristics inheritance system
+- Rabbits age system (with death and adaptative scale)
+- Gauge icons adjusted based on need type
+- Avoid reproduction between rabbits of the same family
+- Total steps display
 - Camera motion (zoom and pan)
 - Better map shape (using cellular automaton?)

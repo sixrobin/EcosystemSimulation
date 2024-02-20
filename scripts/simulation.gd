@@ -63,6 +63,10 @@ func remove_grass(grass: Grass) -> void:
 	grass.queue_free()
 
 
+func rabbit_birth(father: Rabbit, mother: Rabbit) -> Rabbit:
+	return null
+
+
 func step() -> void:
 	steps += 1
 	
@@ -103,9 +107,6 @@ func _ready() -> void:
 			grass_tile = tilemap.get_random_tile()
 		var new_grass = add_grass(grass_tile)
 		
-	for rabbit in rabbits:
-		rabbit.init()
-
 	if simulation_type == SimulationType.IMMEDIATE:
 		# TODO: Implement this properly.
 		print("TODO: Processing all simulation immediatly.")
