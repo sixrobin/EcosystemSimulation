@@ -29,6 +29,7 @@ enum Gender
 @export_group("Settings")
 @export var full_hunger_steps := 100
 @export var full_thirst_steps := 50
+@export var full_reproduction_steps := 50
 @export var height_offset := 0.5
 @export var move_duration := 0.5
 
@@ -42,6 +43,7 @@ var thirst := 0.0
 var reproduction := 0.0
 
 var target_tile: Tile
+var target_partner: Rabbit
 var current_path: Array = []
 
 
@@ -52,9 +54,10 @@ func init() -> void:
 func step(simulation_type: Simulation.SimulationType) -> void:
 	set_hunger(hunger + 1.0 / full_hunger_steps)
 	set_thirst(thirst + 1.0 / full_thirst_steps)
-	set_thirst(thirst + 1.0 / full_thirst_steps)
+	if gender == Gender.MALE:
+		set_reproduction(reproduction + 1.0 / full_reproduction_steps)
 	
-	if target_tile == null:
+	if target_tile == null and target_partner == null:
 		# TODO: expose values.
 		if hunger < 1.0 and hunger > 0.3:
 			current_need = NeedType.HUNGER
@@ -67,13 +70,20 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 			else:
 				current_need = NeedType.THIRST
 				target_closest_water()
-		elif reproduction < 1.0 and reproduction > 0.5:
+		elif gender == Gender.MALE and reproduction < 1.0 and reproduction > 0.5:
 			current_need = NeedType.REPRODUCTION
 			look_for_partner()
 	
 	if current_path != null and current_path.size() > 0:
 		var next_tile = current_path.pop_front()
 		set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
+		
+	# Refresh path to partner as it could be moving.
+	if current_need == NeedType.REPRODUCTION and target_partner != null:
+		current_path = simulation.a_star.try_find_path(tile, target_partner.tile)
+		if current_path.size() > 0:
+			current_path.remove_at(0)
+			current_path.remove_at(current_path.size() - 1)
 
 
 func kill() -> void:
@@ -86,27 +96,21 @@ func kill() -> void:
 
 func set_hunger(value: float) -> void:
 	hunger = value
+	gauge_hunger.set_value(hunger)
 	if hunger >= 1.0:
 		kill()
-		return
-	
-	gauge_hunger.set_value(hunger)
 		
 func set_thirst(value: float) -> void:
 	thirst = value
+	gauge_thirst.set_value(thirst)
 	if thirst >= 1.0:
 		kill()
-		return
-	
-	gauge_thirst.set_value(thirst)
 
 func set_reproduction(value: float) -> void:
 	reproduction = value
+	gauge_reproduction.set_value(reproduction)
 	if reproduction >= 1.0:
 		kill()
-		return
-	
-	gauge_reproduction.set_value(reproduction)
 	
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
@@ -131,6 +135,9 @@ func set_gender(new_gender: Gender):
 	
 	view_female.set_process(gender == Gender.FEMALE)
 	view_female.visible = gender == Gender.FEMALE
+	
+	gauge_reproduction.set_process(gender == Gender.MALE)
+	gauge_reproduction.visible = gender == Gender.MALE
 
 
 func move_to_tile(new_tile: Tile) -> void:
@@ -161,6 +168,13 @@ func on_tile_reached() -> void:
 			set_thirst(0.0)
 			current_path.clear()
 			target_tile = null
+			current_need = NeedType.NONE
+	elif current_need == NeedType.REPRODUCTION:
+		if target_partner != null and current_path.size() == 0:
+			print("Partner found!")
+			set_reproduction(0.0)
+			current_path.clear()
+			target_partner = null
 			current_need = NeedType.NONE
 
 
@@ -210,5 +224,28 @@ func target_closest_water() -> void:
 			current_path.remove_at(current_path.size() - 1)
 
 func look_for_partner() -> void:
-	# TODO.
-	pass
+	if simulation.rabbits.size() <= 1:
+		return
+		
+	var closest_partner: Rabbit
+	var closest_partner_distance := (1 << 63) - 1
+	
+	for rabbit in simulation.rabbits:
+		if rabbit.gender == gender:
+			continue
+		# TODO: already reproducing condition.
+		# TODO: minimum age condition.
+		
+		var to_rabbit := Vector2i(rabbit.tile.coords() - tile.coords())
+		var rabbit_distance := to_rabbit.length()
+		if rabbit_distance < closest_partner_distance:
+			closest_partner_distance = rabbit_distance
+			closest_partner = rabbit
+	
+	if closest_partner != null:
+		# TODO: If partner is on a neighbouring tile, reproduce instantly.
+		target_partner = closest_partner
+		current_path = simulation.a_star.try_find_path(tile, target_partner.tile)
+		if current_path.size() > 0:
+			current_path.remove_at(0)
+			current_path.remove_at(current_path.size() - 1)

@@ -11,7 +11,7 @@ albedo_color = Color(1, 0.721569, 0.317647, 1)
 metallic_specular = 0.0
 roughness = 0.0
 
-[node name="Rabbit" type="Node3D" node_paths=PackedStringArray("view_world", "view_male", "view_female", "gauge_hunger", "gauge_thirst")]
+[node name="Rabbit" type="Node3D" node_paths=PackedStringArray("view_world", "view_male", "view_female", "gauge_hunger", "gauge_thirst", "gauge_reproduction")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.1, 0)
 script = ExtResource("1_ls0cy")
 view_world = NodePath("View_World")
@@ -19,7 +19,9 @@ view_male = NodePath("View_World/View_World_Male")
 view_female = NodePath("View_World/View_World_Female")
 gauge_hunger = NodePath("View_Gauges/Gauge_Hunger")
 gauge_thirst = NodePath("View_Gauges/Gauge_Thirst")
-full_hunger_steps = 70
+gauge_reproduction = NodePath("View_Gauges/Gauge_Reproduction")
+full_thirst_steps = 100
+full_reproduction_steps = 100
 height_offset = 0.2
 
 [node name="View_World" type="Node3D" parent="."]
@@ -92,3 +94,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.151106, 0.470511, 0)
 [node name="Gauge_Thirst" parent="View_Gauges" node_paths=PackedStringArray("slider") instance=ExtResource("2_kxx63")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.151106, 0.692661, 2.98023e-08)
 slider = NodePath("../Gauge_Hunger/Gauge_Slider")
+
+[node name="Gauge_Reproduction" parent="View_Gauges" instance=ExtResource("2_kxx63")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.151, 0.915, 0)

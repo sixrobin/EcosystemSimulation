@@ -55,11 +55,11 @@ func add_grass(tile: Tile) -> Grass:
 func step() -> void:
 	steps += 1
 	
-	for rabbit in rabbits:
-		rabbit.step(simulation_type)
-	
 	for tile in tilemap.tiles:
 		tile.step(steps)
+		
+	for rabbit in rabbits:
+		rabbit.step(simulation_type)
 
 
 func _ready() -> void:
@@ -81,7 +81,6 @@ func _ready() -> void:
 		var rabbit_tile := tilemap.get_random_tile()
 		while not rabbit_tile.can_add_rabbit():
 			rabbit_tile = tilemap.get_random_tile()
-		
 		var new_rabbit = add_rabbit(rabbit_tile)
 		rabbits.append(new_rabbit)
 
@@ -90,7 +89,6 @@ func _ready() -> void:
 		var grass_tile := tilemap.get_random_tile()
 		while not grass_tile.can_add_grass():
 			grass_tile = tilemap.get_random_tile()
-		
 		var new_grass = add_grass(grass_tile)
 		
 	for rabbit in rabbits:
