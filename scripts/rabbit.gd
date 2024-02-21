@@ -30,7 +30,7 @@ enum Gender
 @export var full_hunger_steps := 100
 @export var full_thirst_steps := 50
 @export var full_reproduction_steps := 50
-@export_range(0.0, 1.0) var adult_age_percentage := 0.25
+@export var adult_age := 200
 @export var full_age_steps_min_max := Vector2i(1000, 1200)
 @export var native_rabbits_age_min_max := Vector2i(300, 400)
 
@@ -44,7 +44,7 @@ enum Gender
 @onready var full_age_steps := simulation.rng.randi_range(full_age_steps_min_max.x, full_age_steps_min_max.y)
 var tile: Tile
 var gender := Gender.NONE
-var age := 0.0
+var age := 0
 
 var current_need := NeedType.NONE
 var hunger := 0.0
@@ -61,12 +61,15 @@ func randomize_native_age() -> void:
 
 
 func step(simulation_type: Simulation.SimulationType) -> void:
-	age += 1.0 / full_age_steps
-	if age > 1.0:
+	age += 1
+	if age > full_age_steps:
 		kill()
 		return
 		
-	# TODO: adjust scale based on age.
+	var to_adult_percentage := age / float(adult_age)
+	to_adult_percentage = min(to_adult_percentage, 1.0)
+	var scale = lerp(min_age_scale, 1.0, to_adult_percentage)
+	view_world.scale = Vector3(1.0, 1.0, 1.0) * scale
 	
 	set_need_value(NeedType.HUNGER, hunger + 1.0 / full_hunger_steps)
 	set_need_value(NeedType.THIRST, thirst + 1.0 / full_thirst_steps)

@@ -22,6 +22,7 @@ gauge_thirst = NodePath("View_Gauges/Gauge_Thirst")
 gauge_reproduction = NodePath("View_Gauges/Gauge_Reproduction")
 full_thirst_steps = 100
 full_reproduction_steps = 100
+adult_age = 100
 full_age_steps_min_max = Vector2i(500, 800)
 native_rabbits_age_min_max = Vector2i(200, 300)
 height_offset = 0.2
