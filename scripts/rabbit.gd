@@ -32,7 +32,6 @@ enum Gender
 @export var full_reproduction_steps := 50
 @export var adult_age := 200
 @export var full_age_steps_min_max := Vector2i(1000, 1200)
-@export var native_rabbits_age_min_max := Vector2i(300, 400)
 
 @export_group("View settings")
 @export var height_offset := 0.5
@@ -56,20 +55,11 @@ var target_partner: Rabbit
 var current_path: Array = []
 
 
-func randomize_native_age() -> void:
-	age = simulation.rng.randi_range(native_rabbits_age_min_max.x, native_rabbits_age_min_max.y)
-
-
 func step(simulation_type: Simulation.SimulationType) -> void:
 	age += 1
 	if age > full_age_steps:
 		kill()
 		return
-		
-	var to_adult_percentage := age / float(adult_age)
-	to_adult_percentage = min(to_adult_percentage, 1.0)
-	var scale = lerp(min_age_scale, 1.0, to_adult_percentage)
-	view_world.scale = Vector3(1.0, 1.0, 1.0) * scale
 	
 	set_need_value(NeedType.HUNGER, hunger + 1.0 / full_hunger_steps)
 	set_need_value(NeedType.THIRST, thirst + 1.0 / full_thirst_steps)
@@ -110,11 +100,20 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 		if next_tile.rabbit == null:
 			current_path.remove_at(0)
 			set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
+			
+	update_age_size()	
 
 
 func kill() -> void:
 	print("{r} death.".format({"r": name}))
 	simulation.remove_rabbit(self)
+
+
+func update_age_size():
+	var to_adult_percentage := age / float(adult_age)
+	to_adult_percentage = min(to_adult_percentage, 1.0)
+	var scale = lerp(min_age_scale, 1.0, to_adult_percentage)
+	view_world.scale = Vector3(1.0, 1.0, 1.0) * scale
 
 
 func set_need_value(type: NeedType, value: float) -> void:
@@ -144,9 +143,11 @@ func fulfill_need(type: NeedType) -> void:
 
 
 func set_tile(new_tile: Tile, instantly: bool) -> void:
-	if tile != null: tile.set_rabbit(null)
+	if tile != null:
+		tile.set_rabbit(null)
 	tile = new_tile
-	if tile != null: tile.set_rabbit(self)
+	if tile != null:
+		tile.set_rabbit(self)
 	
 	if instantly:
 		view_world.look_at(tile.position + Vector3(0.0, height_offset, 0.0))
@@ -194,12 +195,12 @@ func on_tile_reached() -> void:
 			fulfill_need(NeedType.THIRST)
 	elif current_need == NeedType.REPRODUCTION:
 		if target_partner != null and current_path.size() == 0:
-			print("Making a baby rabbit!") # TODO.
+			simulation.add_baby_rabbit(target_partner, self)
 			fulfill_need(NeedType.REPRODUCTION)
 
 
 func target_or_eat_closest_grass() -> void:
-	var is_valid_grass_tile := func(t):
+	var is_valid_grass_tile := func(t: Tile):
 		return t.grass != null and t.grass.targetting_rabbit == null
 		
 	var target_grass_tile := simulation.tilemap.get_closest_tile(tile, is_valid_grass_tile)
@@ -220,7 +221,7 @@ func target_or_eat_closest_grass() -> void:
 		current_path.remove_at(0)
 			
 func target_or_drink_closest_water() -> void:
-	var is_water := func(t):
+	var is_water := func(t: Tile):
 		return t.type == Tile.TileType.WATER
 		
 	target_tile = simulation.tilemap.get_closest_tile(tile, is_water)

@@ -17,9 +17,11 @@ func set_targetting_rabbit(rabbit: Rabbit) -> void:
 
 
 func set_tile(new_tile: Tile) -> void:
-	if tile != null: tile.grass = null
+	if tile != null:
+		tile.grass = null
 	tile = new_tile
-	if tile != null: tile.grass = self
+	if tile != null:
+		tile.grass = self
 	
 	position = tile.position
 	position.y += height_offset

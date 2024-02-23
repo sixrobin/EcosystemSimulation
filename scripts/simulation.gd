@@ -16,6 +16,7 @@ enum SimulationType
 @export var simulation_type := SimulationType.ANIMATED
 @export var step_delay := 1.5
 @export_range(0.0, 1.0) var female_percentage := 0.5
+@export var native_rabbits_age_min_max := Vector2i(300, 400)
 
 @export_group("References")
 @export var rabbit_scene: PackedScene
@@ -30,19 +31,34 @@ enum SimulationType
 
 var rng := RandomNumberGenerator.new()
 var rabbits: Array[Rabbit]
+var rabbit_index := 0
 var grasses: Array[Grass]
 var timer := 0.0
 var steps := 0
 
 
-func add_rabbit(tile: Tile) -> Rabbit:
+func add_rabbit(tile: Tile, age: float) -> Rabbit:
+	rabbit_index += 1
+	
 	var new_rabbit := rabbit_scene.instantiate() as Rabbit
-	new_rabbit.name = "Rabbit_{i}".format({"i": rabbits.size()})
+	new_rabbit.name = "Rabbit_{i}".format({"i": rabbit_index})
 	new_rabbit.set_tile(tile, true)
 	new_rabbit.set_gender(Rabbit.Gender.MALE if rng.randf() > female_percentage else Rabbit.Gender.FEMALE)
+	new_rabbit.age = age
+	new_rabbit.update_age_size()
+	
 	add_child(new_rabbit)
-	new_rabbit.randomize_native_age()
+	rabbits.append(new_rabbit)
+	
 	return new_rabbit
+
+func add_baby_rabbit(mother: Rabbit, father: Rabbit) -> Rabbit:
+	var is_tile_valid := func(t: Tile):
+		return t.can_add_rabbit()
+		
+	var tile := tilemap.get_closest_tile(mother.tile, is_tile_valid)
+	var age = 0
+	return add_rabbit(tile, 0);
 
 func remove_rabbit(rabbit: Rabbit) -> void:
 	rabbits.remove_at(rabbits.find(self))
@@ -62,10 +78,6 @@ func remove_grass(grass: Grass) -> void:
 	grasses.remove_at(grasses.find(self))
 	grass.tile.grass = null
 	grass.queue_free()
-
-
-func rabbit_birth(father: Rabbit, mother: Rabbit) -> Rabbit:
-	return null
 
 
 func step() -> void:
@@ -98,8 +110,8 @@ func _ready() -> void:
 		var rabbit_tile := tilemap.get_random_tile()
 		while not rabbit_tile.can_add_rabbit():
 			rabbit_tile = tilemap.get_random_tile()
-		var new_rabbit = add_rabbit(rabbit_tile)
-		rabbits.append(new_rabbit)
+		var age := rng.randi_range(native_rabbits_age_min_max.x, native_rabbits_age_min_max.y)
+		var new_rabbit = add_rabbit(rabbit_tile, age)
 
 	# Init grass.
 	for i in init_grasses:
