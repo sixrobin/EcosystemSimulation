@@ -39,9 +39,9 @@ func add_rabbit(tile: Tile) -> Rabbit:
 	var new_rabbit := rabbit_scene.instantiate() as Rabbit
 	new_rabbit.name = "Rabbit_{i}".format({"i": rabbits.size()})
 	new_rabbit.set_tile(tile, true)
-	new_rabbit.randomize_native_age()
 	new_rabbit.set_gender(Rabbit.Gender.MALE if rng.randf() > female_percentage else Rabbit.Gender.FEMALE)
 	add_child(new_rabbit)
+	new_rabbit.randomize_native_age()
 	return new_rabbit
 
 func remove_rabbit(rabbit: Rabbit) -> void:
