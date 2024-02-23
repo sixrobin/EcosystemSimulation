@@ -63,7 +63,7 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 	
 	set_need_value(NeedType.HUNGER, hunger + 1.0 / full_hunger_steps)
 	set_need_value(NeedType.THIRST, thirst + 1.0 / full_thirst_steps)
-	if gender == Gender.MALE:
+	if gender == Gender.MALE and is_adult():
 		set_need_value(NeedType.REPRODUCTION, reproduction + 1.0 / full_reproduction_steps)
 	
 	if current_need == NeedType.NONE:
@@ -101,7 +101,11 @@ func step(simulation_type: Simulation.SimulationType) -> void:
 			current_path.remove_at(0)
 			set_tile(next_tile, simulation_type != Simulation.SimulationType.ANIMATED)
 			
-	update_age_size()	
+	update_age_size()
+	
+	if is_adult():
+		gauge_reproduction.set_process(gender == Gender.MALE)
+		gauge_reproduction.visible = gender == Gender.MALE
 
 
 func kill() -> void:
@@ -109,7 +113,7 @@ func kill() -> void:
 	simulation.remove_rabbit(self)
 
 
-func update_age_size():
+func update_age_size() -> void:
 	var to_adult_percentage := age / float(adult_age)
 	to_adult_percentage = min(to_adult_percentage, 1.0)
 	var scale = lerp(min_age_scale, 1.0, to_adult_percentage)
@@ -158,7 +162,7 @@ func set_tile(new_tile: Tile, instantly: bool) -> void:
 		move_to_tile(tile)
 
 
-func set_gender(new_gender: Gender):
+func set_gender(new_gender: Gender) -> void:
 	gender = new_gender
 	
 	view_male.set_process(gender == Gender.MALE)
@@ -167,8 +171,12 @@ func set_gender(new_gender: Gender):
 	view_female.set_process(gender == Gender.FEMALE)
 	view_female.visible = gender == Gender.FEMALE
 	
-	gauge_reproduction.set_process(gender == Gender.MALE)
-	gauge_reproduction.visible = gender == Gender.MALE
+	gauge_reproduction.set_process(gender == Gender.MALE and is_adult())
+	gauge_reproduction.visible = gender == Gender.MALE and is_adult()
+
+
+func is_adult() -> bool:
+	return (age / float(adult_age)) >= 1.0
 
 
 func move_to_tile(new_tile: Tile) -> void:
