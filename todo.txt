@@ -1,5 +1,6 @@
 TODO LIST
 
+- Fix console errors
 - Rabbit children caracteristics inheritance system
 - Gauge icons adjusted based on need type
 - Total steps display

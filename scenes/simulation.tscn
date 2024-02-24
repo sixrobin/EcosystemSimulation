@@ -17,7 +17,7 @@ rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")
 tilemap = NodePath("Tilemap")
 a_star = NodePath("A*")
-init_grasses = 5
+init_rabbits = 8
 water_chance = 0.1
 
 [node name="Camera" type="Camera3D" parent="."]
@@ -25,6 +25,8 @@ transform = Transform3D(-1, 0, 0, 0, 0.514873, 0.857266, 0, -0.857266, 0.514873,
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
+shadow_enabled = true
+shadow_blur = 0.5
 
 [node name="Tilemap" type="Node" parent="."]
 script = ExtResource("5_7j8u5")

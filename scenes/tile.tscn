@@ -14,7 +14,7 @@ albedo_color = Color(0.184314, 0.745098, 1, 1)
 script = ExtResource("1_w4ipd")
 view_grass = NodePath("TileView_Grass")
 view_water = NodePath("TileView_Water")
-next_grass_timer_min_max = Vector2i(100, 1000)
+next_grass_timer_min_max = Vector2i(50, 600)
 
 [node name="TileView_Grass" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
