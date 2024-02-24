@@ -11,7 +11,7 @@
 [node name="Simulation" type="Node3D" node_paths=PackedStringArray("tilemap", "a_star")]
 script = ExtResource("1_ysqbh")
 simulation_type = 2
-step_delay = 0.1
+step_delay = 0.05
 native_rabbits_age_min_max = Vector2i(200, 300)
 rabbit_scene = ExtResource("3_hu3ma")
 grass_scene = ExtResource("4_dtcnq")

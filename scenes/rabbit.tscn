@@ -24,7 +24,7 @@ full_hunger_steps = 80
 full_reproduction_steps = 120
 adult_age = 100
 full_age_steps_min_max = Vector2i(600, 800)
-height_offset = 0.2
+height_offset = 0.1
 
 [node name="View_World" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)

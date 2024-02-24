@@ -154,7 +154,7 @@ func set_tile(new_tile: Tile, instantly: bool) -> void:
 		tile.set_rabbit(self)
 	
 	if instantly:
-		view_world.look_at(tile.position + Vector3(0.0, height_offset, 0.0))
+		view_world.look_at(tile.position)
 		position = tile.position
 		position.y += height_offset
 		on_tile_reached()
@@ -182,7 +182,7 @@ func is_adult() -> bool:
 func move_to_tile(new_tile: Tile) -> void:
 	var previous_position := position
 	var target_position := new_tile.position + Vector3(0.0, height_offset, 0.0)
-	view_world.look_at(target_position)
+	view_world.look_at(target_position - Vector3(0.0, height_offset, 0.0))
 	
 	var t := 0.0
 	var time_step := 0.016
